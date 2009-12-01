@@ -1,0 +1,18 @@
+
+== How to setup Openfire ==
+
+ 1. Get Openfire 3.6.x from http://www.igniterealtime.org/downloads/
+ 2. Read the installation instructions and intall Openfire
+ 3. During the installation you will be asked to enter domain name for
+for the Openfire server. Make sure the domain name is "localhost" or
+the tests will fail.
+ 4. After the installation restart the server and login to the admin
+console using the username "admin" and the password that you entered
+during the installation.
+ 5. Create three users with the following data:
+  * Username: auction-item-54321 Password: auction
+  * Username: auction-item-65432 Password: auction
+  * Username: sniper             Password: sniper
+
+After completing the above steps you are ready to run the tests
+(provided that you have compiled the code).

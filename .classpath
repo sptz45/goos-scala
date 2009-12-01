@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" output="build/classes/test" path="test/unit"/>
+	<classpathentry kind="src" output="build/classes/test" path="test/integration"/>
+	<classpathentry kind="src" output="build/classes/test" path="test/end-to-end"/>
+	<classpathentry kind="con" path="ch.epfl.lamp.sdt.launching.SCALA_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/deploy/commons-io-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/deploy/commons-lang-2.4.jar"/>
+	<classpathentry kind="lib" path="lib/deploy/smack_3_1_0.jar"/>
+	<classpathentry kind="lib" path="lib/deploy/smackx_3_1_0.jar"/>
+	<classpathentry kind="lib" path="lib/develop/cglib-nodep-2.2.jar"/>
+	<classpathentry kind="lib" path="lib/develop/hamcrest-core-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/develop/hamcrest-core-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/develop/hamcrest-library-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/develop/hamcrest-library-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/develop/jmock-2.6-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/develop/jmock-junit4-2.6-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/develop/jmock-legacy-2.6-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/develop/junit-dep-4.6.jar" sourcepath="lib/develop/junit-4.6-src.jar"/>
+	<classpathentry kind="lib" path="lib/develop/objenesis-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/develop/windowlicker-core-DEV.jar"/>
+	<classpathentry kind="lib" path="lib/develop/windowlicker-swing-DEV.jar"/>
+	<classpathentry kind="output" path="build/classes/app"/>
+</classpath>
