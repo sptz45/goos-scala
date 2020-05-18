@@ -11,7 +11,7 @@ import FakeAuctionServer.XMPP_HOSTNAME
 object ApplicationRunner {
   val SNIPER_ID = "sniper" 
   val SNIPER_PASSWORD = "sniper"
-  val SNIPER_XMPP_ID = SNIPER_ID + "@" + XMPP_HOSTNAME + "/Auction"
+  val SNIPER_XMPP_ID: String = SNIPER_ID + "@" + XMPP_HOSTNAME + "/Auction"
 }
 
 
@@ -19,7 +19,7 @@ class ApplicationRunner {
   import ApplicationRunner._
   
   private val logDriver = new AuctionLogDriver
-  private var driver: AuctionSniperDriver = null 
+  private var driver: AuctionSniperDriver = _
   
   def startBiddingIn(auctions: FakeAuctionServer*): Unit = {
     startSniper()

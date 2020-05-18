@@ -8,20 +8,20 @@ case class SniperSnapshot(
   lastBid: Int = 0,
   state: SniperState = JOINING) {
 
-  def bidding(newLastPrice: Int, newLastBid: Int) =
+  def bidding(newLastPrice: Int, newLastBid: Int): SniperSnapshot =
     copy(lastPrice=newLastPrice, lastBid=newLastBid, state=BIDDING)
 
-  def winning(newLastPrice: Int) = copy(lastPrice=newLastPrice, state=WINNING)
+  def winning(newLastPrice: Int): SniperSnapshot = copy(lastPrice=newLastPrice, state=WINNING)
 
-  def losing(newLastPrice: Int) = copy(lastPrice=newLastPrice, state=LOSING)
+  def losing(newLastPrice: Int): SniperSnapshot = copy(lastPrice=newLastPrice, state=LOSING)
 
-  def closed() = copy(state = state.whenAuctionClosed)
+  def closed(): SniperSnapshot = copy(state = state.whenAuctionClosed)
 
-  def failed() = SniperSnapshot(itemId, state=FAILED)
+  def failed(): SniperSnapshot = SniperSnapshot(itemId, state=FAILED)
 
-  def isForSameItemAs(sniperSnapshot: SniperSnapshot) = itemId == sniperSnapshot.itemId
+  def isForSameItemAs(sniperSnapshot: SniperSnapshot): Boolean = itemId == sniperSnapshot.itemId
 }
 
 object SniperSnapshot {
-  def joining(itemId: String) = SniperSnapshot(itemId)
+  def joining(itemId: String): SniperSnapshot = SniperSnapshot(itemId)
 }

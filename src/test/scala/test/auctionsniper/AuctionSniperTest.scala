@@ -54,9 +54,9 @@ class AuctionSniperTest {
     val increment = 25 
     val bid = price + increment
     context.checking(new Expectations { 
-      oneOf(auction).bid(bid);
-      
-      atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, price, bid, BIDDING)); 
+      oneOf(auction).bid(bid)
+
+      atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, price, bid, BIDDING))
     }) 
     
     sniper.currentPrice(price, increment, PriceSource.FromOtherBidder) 
@@ -69,7 +69,7 @@ class AuctionSniperTest {
     val increment = 25
 
     context.checking(new Expectations {
-      atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, price, 0, LOSING));
+      atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, price, 0, LOSING))
     })
     
     sniper.currentPrice(price, increment, PriceSource.FromOtherBidder)
@@ -79,7 +79,7 @@ class AuctionSniperTest {
   def doesNotBidAndReportsLosingIfSubsequentPriceIsAboveStopPrice(): Unit = {
     allowingSniperBidding()
     context.checking(new Expectations {
-      val bid = 123 + 45
+      private val bid = 123 + 45
       allowing(auction).bid(bid)
       
       atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 2345, bid, LOSING)); when(sniperState.is("bidding"))
@@ -97,7 +97,7 @@ class AuctionSniperTest {
     allowingSniperBidding()
     allowingSniperWinning()
     context.checking(new Expectations {
-      val bid = 123 + 45
+      private val bid = 123 + 45
       allowing(auction).bid(bid)
       
       atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, price, bid, LOSING)); when(sniperState.is("winning"))
@@ -119,8 +119,8 @@ class AuctionSniperTest {
       atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, price2, 0, LOSING)); inSequence(states)
     })
    
-    sniper.currentPrice(price1, 25, PriceSource.FromOtherBidder);
-    sniper.currentPrice(price2, 25, PriceSource.FromOtherBidder);
+    sniper.currentPrice(price1, 25, PriceSource.FromOtherBidder)
+    sniper.currentPrice(price2, 25, PriceSource.FromOtherBidder)
   }
 
   @Test
@@ -129,20 +129,20 @@ class AuctionSniperTest {
     ignoringAuction()
     
     context.checking(new Expectations {
-      atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 123, 168, LOST)); 
-                                                                    when(sniperState.is("bidding")); 
+      atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 123, 168, LOST))
+      when(sniperState.is("bidding"))
     })
     
-    sniper.currentPrice(123, 45, PriceSource.FromOtherBidder); 
-    sniper.auctionClosed(); 
+    sniper.currentPrice(123, 45, PriceSource.FromOtherBidder)
+    sniper.auctionClosed()
   } 
   
   @Test
   def reportsLostIfAuctionClosesWhenLosing(): Unit = {
     allowingSniperLosing()
     context.checking(new Expectations {
-      atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 1230, 0, LOST)); 
-                                                                    when(sniperState.is("losing"));
+      atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 1230, 0, LOST))
+      when(sniperState.is("losing"))
     })
     
     sniper.currentPrice(1230, 456, PriceSource.FromOtherBidder)
@@ -226,8 +226,8 @@ class AuctionSniperTest {
   private def expectSniperToFailWhenItIs(state: String): Unit = {
     context.checking(new Expectations {
       atLeast(1).of(sniperListener).sniperStateChanged(
-          new SniperSnapshot(ITEM_ID, 0, 0, SniperState.FAILED));
-                                      when(sniperState.is(state));
+          new SniperSnapshot(ITEM_ID, 0, 0, SniperState.FAILED))
+      when(sniperState.is(state))
     })
   }
   private def ignoringAuction(): Unit = {
@@ -255,6 +255,6 @@ class AuctionSniperTest {
 
   private def aSniperThatIs(state: SniperState) =  
     new FeatureMatcher[SniperSnapshot, SniperState](equalTo(state), "sniper that is ", "was") {
-      override protected def featureValueOf(actual: SniperSnapshot) = actual.state  
+      override protected def featureValueOf(actual: SniperSnapshot): SniperState = actual.state
     } 
 } 

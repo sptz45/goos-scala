@@ -11,6 +11,6 @@ object UserRequestListener {
   
   case class Item(identifier: String, stopPrice: Int) {
     
-    def allowsBid(bid: Int) = bid <= stopPrice
+    def allowsBid(bid: Int): Boolean = bid <= stopPrice
   }
 }

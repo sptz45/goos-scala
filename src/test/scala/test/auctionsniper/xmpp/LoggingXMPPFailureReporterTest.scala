@@ -21,7 +21,7 @@ class LoggingXMPPFailureReporterTest {
   
   @After
   def resetLogging(): Unit = { 
-    LogManager.getLogManager().reset() 
+    LogManager.getLogManager.reset()
   } 
   
   @Test 

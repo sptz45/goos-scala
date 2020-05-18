@@ -16,7 +16,7 @@ class FakeAuctionServer(val itemId: String) {
   private val messageListener = new SingleMessageListener
   private val connection = new XMPPConnection(XMPP_HOSTNAME)
 
-  private var currentChat: Chat = null
+  private var currentChat: Chat = _
 
   def startSellingItem(): Unit = {
     connection.connect()

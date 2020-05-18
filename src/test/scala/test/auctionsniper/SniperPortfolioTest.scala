@@ -17,7 +17,7 @@ class SniperPortfolioTest {
   
   @Test
   def notifiesListenersOfNewSnipers(): Unit = {
-    val sniper = new AuctionSniper(new Item("item id", 123), null)
+    val sniper = new AuctionSniper(Item("item id", 123), null)
     context.checking(new Expectations {
       oneOf(listener).sniperAdded(sniper)
     })

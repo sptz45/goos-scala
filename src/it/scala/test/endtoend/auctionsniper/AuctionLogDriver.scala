@@ -18,6 +18,6 @@ class AuctionLogDriver {
 
   def clearLog(): Unit = {
     logFile.delete()
-    LogManager.getLogManager().reset()
+    LogManager.getLogManager.reset()
   }
 }

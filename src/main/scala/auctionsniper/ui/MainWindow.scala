@@ -11,7 +11,7 @@ import auctionsniper.UserRequestListener.Item
 class MainWindow(portfolio: SniperPortfolio) extends JFrame("Auction Sniper") {
   import MainWindow._
   
-  val userRequests = util.Announcer.to[UserRequestListener]
+  private val userRequests = util.Announcer.to[UserRequestListener]
   
   setName(MainWindow.MAIN_WINDOW_NAME)
   fillContentPane(makeSnipersTable(portfolio), makeControls())
@@ -43,7 +43,7 @@ class MainWindow(portfolio: SniperPortfolio) extends JFrame("Auction Sniper") {
     
     joinAuctionButton.addActionListener(new ActionListener() { 
       def actionPerformed(e: ActionEvent): Unit = { 
-        userRequests.announce().joinAuction(new Item(itemId, stopPrice)) 
+        userRequests.announce().joinAuction(Item(itemId, stopPrice))
       } 
       private def itemId = itemIdField.getText
       private def stopPrice = stopPriceField.getValue.asInstanceOf[Number].intValue 

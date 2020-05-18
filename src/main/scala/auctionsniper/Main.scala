@@ -13,10 +13,8 @@ class Main {
   startUserInterface()
   
   private def startUserInterface(): Unit = {
-    SwingUtilities.invokeAndWait(new Runnable() {
-      def run(): Unit = {
-        ui = new MainWindow(portfolio)
-      }
+    SwingUtilities.invokeAndWait(() => {
+      ui = new MainWindow(portfolio)
     })
   }
 

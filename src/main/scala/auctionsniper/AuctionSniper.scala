@@ -6,7 +6,7 @@ import UserRequestListener.Item
 class AuctionSniper(item: Item, auction: Auction) extends AuctionEventListener {
   
   private val listeners = Announcer.to[SniperListener]
-  var snapshot = SniperSnapshot.joining(item.identifier)
+  var snapshot: SniperSnapshot = SniperSnapshot.joining(item.identifier)
   
   def addSniperListener(listener: SniperListener): Unit = {
     listeners += listener
@@ -23,7 +23,7 @@ class AuctionSniper(item: Item, auction: Auction) extends AuctionEventListener {
       case FromSniper =>
         snapshot = snapshot.winning(price)
       case _ =>
-        val bid = price + increment;
+        val bid = price + increment
         if (item.allowsBid(bid)) {
           auction.bid(bid)
           snapshot = snapshot.bidding(price, bid)

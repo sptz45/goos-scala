@@ -45,9 +45,9 @@ object XMPPAuctionHouse {
   val LOG_FILE_NAME = "auction-sniper.log"
   val ITEM_ID_AS_LOGIN = "auction-%s"
   val AUCTION_RESOURCE = "Auction"
-  val AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + XMPPAuctionHouse.AUCTION_RESOURCE
+  val AUCTION_ID_FORMAT: String = ITEM_ID_AS_LOGIN + "@%s/" + XMPPAuctionHouse.AUCTION_RESOURCE
 
-  def auctionId(itemId: String, connection: XMPPConnection) = 
+  def auctionId(itemId: String, connection: XMPPConnection): String =
     AUCTION_ID_FORMAT.format(itemId, connection.getServiceName)
 
   def connect(hostname: String, username: String, password:String): XMPPAuctionHouse = {

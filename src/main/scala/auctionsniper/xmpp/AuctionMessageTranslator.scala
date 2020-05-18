@@ -2,8 +2,7 @@ package auctionsniper.xmpp
 
 import org.jivesoftware.smack.{Chat, MessageListener}
 import org.jivesoftware.smack.packet.Message
-
-import auctionsniper.AuctionEventListener
+import auctionsniper.{AuctionEventListener, PriceSource}
 import auctionsniper.PriceSource._
 
 class AuctionMessageTranslator(
@@ -36,10 +35,10 @@ private class AuctionEvent {
   
   private val fields = new scala.collection.mutable.HashMap[String, String]  
 
-  def eventType = get("Event")
-  def currentPrice = get("CurrentPrice").toInt
-  def increment = get("Increment").toInt
-  def isFrom(sniperId: String) =
+  def eventType: String = get("Event")
+  def currentPrice: Int = get("CurrentPrice").toInt
+  def increment: Int = get("Increment").toInt
+  def isFrom(sniperId: String): PriceSource =
     if (sniperId == bidder) FromSniper else FromOtherBidder
 
   private def bidder  = get("Bidder")
@@ -58,13 +57,13 @@ private class AuctionEvent {
  }
 
 private object AuctionEvent {
-  def from(messageBody: String) = {
+  def from(messageBody: String): AuctionEvent = {
     val event = new AuctionEvent
     for (field <- fieldsIn(messageBody)) event.addField(field)
     event
   }
 
-  def fieldsIn(messageBody: String) =  messageBody.split(";")
+  def fieldsIn(messageBody: String): Array[String] =  messageBody.split(";")
 }
 
 private class MissingValueException(field: String) extends Exception("Missing value for " + field)

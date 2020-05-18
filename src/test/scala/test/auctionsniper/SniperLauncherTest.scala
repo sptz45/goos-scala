@@ -24,15 +24,15 @@ class SniperLauncherTest {
   
   @Test
   def addsNewSniperToCollectorAndThenJoinsAuction(): Unit = {
-    val item = new Item("item 123", 456)
+    val item = Item("item 123", 456)
 
     context.checking(new Expectations() {
-      allowing(auctionHouse).auctionFor(item); will(returnValue(auction));
-      
-      oneOf(auction).addAuctionEventListener(`with`(sniperForItem(item))); when(auctionState.is("not joined"));
-      oneOf(sniperCollector).addSniper(`with`(sniperForItem(item))); when(auctionState.is("not joined"));
-      
-      oneOf(auction).join(); `then`(auctionState.is("joined"));
+      allowing(auctionHouse).auctionFor(item); will(returnValue(auction))
+
+      oneOf(auction).addAuctionEventListener(`with`(sniperForItem(item))); when(auctionState.is("not joined"))
+      oneOf(sniperCollector).addSniper(`with`(sniperForItem(item))); when(auctionState.is("not joined"))
+
+      oneOf(auction).join(); `then`(auctionState.is("joined"))
     })
     
     launcher.joinAuction(item)
@@ -40,6 +40,6 @@ class SniperLauncherTest {
 
   private def sniperForItem(item: Item) =
     new FeatureMatcher[AuctionSniper, String](equalTo(item.identifier), "sniper with item id", "item") {
-      override protected def featureValueOf(actual: AuctionSniper) = actual.snapshot.itemId
+      override protected def featureValueOf(actual: AuctionSniper): String = actual.snapshot.itemId
   }
 }

@@ -11,13 +11,13 @@ class SnipersTableModel extends AbstractTableModel with SniperListener with Port
   
   private val snapshots = new ArrayBuffer[SniperSnapshot]
   
-  def getColumnCount = Column.values.length
+  def getColumnCount: Int = Column.values.length
   
-  def getRowCount = snapshots.size
+  def getRowCount: Int = snapshots.size
 
-  override def getColumnName(column: Int) = Column.at(column).name
+  override def getColumnName(column: Int): String = Column.at(column).name
 
-  def getValueAt(rowIndex: Int, columnIndex: Int) =
+  def getValueAt(rowIndex: Int, columnIndex: Int): AnyRef =
     Column.at(columnIndex).valueIn(snapshots(rowIndex)).asInstanceOf[Object]
   
   def sniperStateChanged(newSnapshot: SniperSnapshot): Unit = {
@@ -43,5 +43,5 @@ object SnipersTableModel {
   private val STATUS_TEXT = Array(
     "Joining", "Bidding", "Winning", "Losing", "Lost", "Won", "Failed")
   
-  def textFor(state: SniperState) = STATUS_TEXT(state.ordinal)
+  def textFor(state: SniperState): String = STATUS_TEXT(state.ordinal)
 }

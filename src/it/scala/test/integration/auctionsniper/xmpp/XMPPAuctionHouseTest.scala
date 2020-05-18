@@ -45,7 +45,7 @@ class XMPPAuctionHouseTest {
   def receivesEventsFromAuctionServerAfterJoining(): Unit = { 
     val auctionWasClosed = new CountDownLatch(1) 
     
-    val auction = auctionHouse.auctionFor(new Item(auctionServer.itemId, 567))
+    val auction = auctionHouse.auctionFor(Item(auctionServer.itemId, 567))
     auction.addAuctionEventListener(auctionClosedListener(auctionWasClosed))
     auction.join()
     auctionServer.hasReceivedJoinRequestFrom(ApplicationRunner.SNIPER_XMPP_ID) 
