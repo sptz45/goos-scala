@@ -43,7 +43,7 @@ class SnipersTableModelTest {
   @Test
   def acceptsNewSniper(): Unit = {
     context.checking(new Expectations {
-      one(listener).tableChanged(`with`(anInsertionAtRow(0)))
+      oneOf(listener).tableChanged(`with`(anInsertionAtRow(0)))
     })
 
     model.sniperAdded(sniper);
@@ -56,7 +56,7 @@ class SnipersTableModelTest {
     val bidding = sniper.snapshot.bidding(555, 666)
     context.checking(new Expectations {
       allowing(listener).tableChanged(`with`(anyInsertionEvent()))
-      one(listener).tableChanged(`with`(aChangeInRow(0))) 
+      oneOf(listener).tableChanged(`with`(aChangeInRow(0)))
     })
 
     model.sniperAdded(sniper)
@@ -68,7 +68,7 @@ class SnipersTableModelTest {
   @Test
   def notifiesListenersWhenAddingASniper(): Unit = {
     context.checking(new Expectations {
-      one(listener).tableChanged(`with`(anInsertionAtRow(0)))
+      oneOf(listener).tableChanged(`with`(anInsertionAtRow(0)))
     })
 
     assertEquals(0, model.getRowCount())
@@ -99,7 +99,7 @@ class SnipersTableModelTest {
     context.checking(new Expectations {
       allowing(listener).tableChanged(`with`(anyInsertionEvent()))
 
-      one(listener).tableChanged(`with`(aChangeInRow(1)))
+      oneOf(listener).tableChanged(`with`(aChangeInRow(1)))
     })
     
     model.sniperAdded(sniper)

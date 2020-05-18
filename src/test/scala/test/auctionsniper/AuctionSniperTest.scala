@@ -54,7 +54,7 @@ class AuctionSniperTest {
     val increment = 25 
     val bid = price + increment
     context.checking(new Expectations { 
-      one(auction).bid(bid); 
+      oneOf(auction).bid(bid);
       
       atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, price, bid, BIDDING)); 
     }) 
@@ -249,7 +249,7 @@ class AuctionSniperTest {
 
   private def allowSniperStateChange(newState: SniperState, oldState: String): Unit = {
     context.checking(new Expectations { 
-      allowing(sniperListener).sniperStateChanged(`with`(aSniperThatIs(newState))); then(sniperState.is(oldState))
+      allowing(sniperListener).sniperStateChanged(`with`(aSniperThatIs(newState))); `then`(sniperState.is(oldState))
     })
   }
 

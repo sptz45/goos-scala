@@ -32,7 +32,7 @@ class SniperLauncherTest {
       oneOf(auction).addAuctionEventListener(`with`(sniperForItem(item))); when(auctionState.is("not joined"));
       oneOf(sniperCollector).addSniper(`with`(sniperForItem(item))); when(auctionState.is("not joined"));
       
-      one(auction).join(); then(auctionState.is("joined"));
+      oneOf(auction).join(); `then`(auctionState.is("joined"));
     })
     
     launcher.joinAuction(item)

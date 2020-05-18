@@ -14,6 +14,7 @@ lazy val root = (project in file("."))
     semanticdbVersion := scalafixSemanticdb.revision, // use Scalafix compatible version
     scalacOptions += "-Ywarn-unused:imports", // required by `RemoveUnused` rule
     scalacOptions += "-Yrangepos",          // required by SemanticDB compiler plugin
+    scalacOptions += "-deprecation",
     libraryDependencies ++= Seq(
       "commons-io"                  % "commons-io"         % "2.6",
       "org.apache.commons"          % "commons-lang3"      % "3.10",
