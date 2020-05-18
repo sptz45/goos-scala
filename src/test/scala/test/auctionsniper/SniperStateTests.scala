@@ -10,19 +10,19 @@ class SniperStateTests {
   import auctionsniper.SniperState._ 
 
   @Test
-  def isWonWhenAuctionClosesWhileWinning() {
+  def isWonWhenAuctionClosesWhileWinning(): Unit = {
     assertEquals(LOST, JOINING.whenAuctionClosed)
     assertEquals(LOST, BIDDING.whenAuctionClosed)
     assertEquals(WON,  WINNING.whenAuctionClosed)
   }
   
   @Test(expected=classOf[Defect])
-  def defectIfAuctionClosesWhenWon() {
+  def defectIfAuctionClosesWhenWon(): Unit = {
     WON.whenAuctionClosed
   }
 
   @Test(expected=classOf[Defect])
-  def defectIfAuctionClosesWhenLost() {
+  def defectIfAuctionClosesWhenLost(): Unit = {
     LOST.whenAuctionClosed
   }
 }

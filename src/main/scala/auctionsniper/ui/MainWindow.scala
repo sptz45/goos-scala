@@ -19,11 +19,11 @@ class MainWindow(portfolio: SniperPortfolio) extends JFrame("Auction Sniper") {
   setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE) 
   setVisible(true)
   
-  def addUserRequestListener(listener: UserRequestListener) {
+  def addUserRequestListener(listener: UserRequestListener): Unit = {
     userRequests += listener
   }
   
-  private def fillContentPane(snipersTable: JTable, controls: JPanel) { 
+  private def fillContentPane(snipersTable: JTable, controls: JPanel): Unit = { 
     val contentPane = getContentPane 
     contentPane.setLayout(new BorderLayout) 
     contentPane.add(controls, BorderLayout.NORTH) 
@@ -42,7 +42,7 @@ class MainWindow(portfolio: SniperPortfolio) extends JFrame("Auction Sniper") {
     joinAuctionButton.setName(JOIN_BUTTON_NAME) 
     
     joinAuctionButton.addActionListener(new ActionListener() { 
-      def actionPerformed(e: ActionEvent) { 
+      def actionPerformed(e: ActionEvent): Unit = { 
         userRequests.announce().joinAuction(new Item(itemId, stopPrice)) 
       } 
       private def itemId = itemIdField.getText

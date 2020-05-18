@@ -2,7 +2,6 @@
 package test.auctionsniper.ui
 
 import javax.swing.event.{TableModelEvent, TableModelListener}
-import org.hamcrest.Matcher
 import org.jmock.{Expectations, Mockery}
 import org.jmock.integration.junit4.JMock
 import org.junit.{Before, Test}
@@ -25,24 +24,24 @@ class SnipersTableModelTest {
   private val sniper = new AuctionSniper(new Item(ITEM_ID, 234), null) 
   
   @Before
-  def attachModelListener() {
+  def attachModelListener(): Unit = {
     model.addTableModelListener(listener) 
   } 
   
   @Test 
-  def hasEnoughColumns() { 
+  def hasEnoughColumns(): Unit = { 
     assertThat(model.getColumnCount, equalTo(Column.values.length))
   }
   
   @Test
-  def setsUpColumnHeadings() { 
+  def setsUpColumnHeadings(): Unit = { 
     for (column <- Column.values) { 
       assertEquals(column.name, model.getColumnName(column.ordinal))
     } 
   } 
   
   @Test
-  def acceptsNewSniper() {
+  def acceptsNewSniper(): Unit = {
     context.checking(new Expectations {
       one(listener).tableChanged(`with`(anInsertionAtRow(0)))
     })
@@ -53,7 +52,7 @@ class SnipersTableModelTest {
   }
   
   @Test
-  def setsSniperValuesInColumns() {
+  def setsSniperValuesInColumns(): Unit = {
     val bidding = sniper.snapshot.bidding(555, 666)
     context.checking(new Expectations {
       allowing(listener).tableChanged(`with`(anyInsertionEvent()))
@@ -67,7 +66,7 @@ class SnipersTableModelTest {
   } 
   
   @Test
-  def notifiesListenersWhenAddingASniper() {
+  def notifiesListenersWhenAddingASniper(): Unit = {
     context.checking(new Expectations {
       one(listener).tableChanged(`with`(anInsertionAtRow(0)))
     })
@@ -81,7 +80,7 @@ class SnipersTableModelTest {
   }
   
   @Test
-  def holdsSnipersInAdditionOrder() {
+  def holdsSnipersInAdditionOrder(): Unit = {
     val sniper2 = new AuctionSniper(new Item("item 1", 345), null)
     context.checking(new Expectations {
       ignoring(listener)
@@ -95,7 +94,7 @@ class SnipersTableModelTest {
   }
   
   @Test
-  def updatesCorrectRowForSniper() {
+  def updatesCorrectRowForSniper(): Unit = {
     val sniper2 = new AuctionSniper(new Item("item 1", 345), null)
     context.checking(new Expectations {
       allowing(listener).tableChanged(`with`(anyInsertionEvent()))
@@ -113,11 +112,11 @@ class SnipersTableModelTest {
   }
 
   @Test(expected=classOf[Defect])
-  def throwsDefectIfNoExistingSniperForAnUpdate() {
+  def throwsDefectIfNoExistingSniperForAnUpdate(): Unit = {
     model.sniperStateChanged(new SniperSnapshot("item 1", 123, 234, SniperState.WINNING))
   }
   
-  private def assertRowMatchesSnapshot(row: Int, snapshot: SniperSnapshot) {
+  private def assertRowMatchesSnapshot(row: Int, snapshot: SniperSnapshot): Unit = {
     assertEquals(snapshot.itemId, cellValue(row, Column.ITEM_IDENTIFIER))
     assertEquals(snapshot.lastPrice, cellValue(row, Column.LAST_PRICE))
     assertEquals(snapshot.lastBid, cellValue(row, Column.LAST_BID))

@@ -11,7 +11,7 @@ class AuctionMessageTranslator(
   listener: AuctionEventListener,
   failureReporter: XMPPFailureReporter) extends MessageListener {
 
-  def processMessage(chat: Chat, message: Message) {
+  def processMessage(chat: Chat, message: Message): Unit = {
     val messageBody = message.getBody
     try {
       translate(messageBody)
@@ -22,7 +22,7 @@ class AuctionMessageTranslator(
     }
   }
   
-  def translate(messageBody: String) {
+  def translate(messageBody: String): Unit = {
     val event = AuctionEvent.from(messageBody)
     event.eventType match {
       case "CLOSE" => listener.auctionClosed()
@@ -51,7 +51,7 @@ private class AuctionEvent {
     value
   }
 
-  private def addField(field: String) {
+  private def addField(field: String): Unit = {
     val pair = field.split(":")
     fields += (pair(0).trim -> pair(1).trim)
   }

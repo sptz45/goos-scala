@@ -1,6 +1,5 @@
 package test.endtoend.auctionsniper
 
-import java.io.IOException
 import javax.swing.SwingUtilities
 import org.hamcrest.Matchers.containsString
 
@@ -22,56 +21,56 @@ class ApplicationRunner {
   private val logDriver = new AuctionLogDriver
   private var driver: AuctionSniperDriver = null 
   
-  def startBiddingIn(auctions: FakeAuctionServer*) {
+  def startBiddingIn(auctions: FakeAuctionServer*): Unit = {
     startSniper()
     auctions.foreach(openBiddingFor(_, Integer.MAX_VALUE))
   }
   
-  def startBiddingWithStopPrice(auction: FakeAuctionServer, stopPrice: Int) {
+  def startBiddingWithStopPrice(auction: FakeAuctionServer, stopPrice: Int): Unit = {
     startSniper()
     openBiddingFor(auction, stopPrice)
   }  
 
-  def hasShownSniperHasLostAuction(auction: FakeAuctionServer, lastPrice: Int, lastBid: Int) {
+  def hasShownSniperHasLostAuction(auction: FakeAuctionServer, lastPrice: Int, lastBid: Int): Unit = {
     driver.showsSniperStatus(auction.itemId, lastPrice, lastBid, textFor(SniperState.LOST))
   } 
   
-  def hasShownSniperIsBidding(auction: FakeAuctionServer, lastPrice: Int, lastBid: Int) {
+  def hasShownSniperIsBidding(auction: FakeAuctionServer, lastPrice: Int, lastBid: Int): Unit = {
     driver.showsSniperStatus(auction.itemId, lastPrice, lastBid, textFor(SniperState.BIDDING))
   }
 
-  def hasShownSniperIsWinning(auction: FakeAuctionServer, winningBid: Int) {
+  def hasShownSniperIsWinning(auction: FakeAuctionServer, winningBid: Int): Unit = {
     driver.showsSniperStatus(auction.itemId, winningBid, winningBid, textFor(SniperState.WINNING))
   }
 
-  def hasShownSniperIsLosing(auction: FakeAuctionServer, lastPrice: Int, lastBid: Int) {
+  def hasShownSniperIsLosing(auction: FakeAuctionServer, lastPrice: Int, lastBid: Int): Unit = {
     driver.showsSniperStatus(auction.itemId, lastPrice, lastBid, textFor(SniperState.LOSING));
   }
 
-  def hasShownSniperHasWonAuction(auction: FakeAuctionServer, lastPrice: Int) {
+  def hasShownSniperHasWonAuction(auction: FakeAuctionServer, lastPrice: Int): Unit = {
     driver.showsSniperStatus(auction.itemId, lastPrice, lastPrice, textFor(SniperState.WON));
   }
 
-  def hasShownSniperHasFailed(auction: FakeAuctionServer) {
+  def hasShownSniperHasFailed(auction: FakeAuctionServer): Unit = {
     driver.showsSniperStatus(auction.itemId, 0, 0, textFor(SniperState.FAILED))
   }
 
-  def reportsInvalidMessage(auction: FakeAuctionServer, brokenMessage: String) {
+  def reportsInvalidMessage(auction: FakeAuctionServer, brokenMessage: String): Unit = {
     logDriver.hasEntry(containsString(brokenMessage))
   }
 
-  def stop() { 
+  def stop(): Unit = { 
     if (driver != null) driver.dispose()
   }
 
-  private def startSniper() {
+  private def startSniper(): Unit = {
     logDriver.clearLog()
     val thread = new Thread("Test Application") { 
-      override def run() {  
+      override def run(): Unit = {  
         try { 
           Main.main(XMPP_HOSTNAME, SNIPER_ID, SNIPER_PASSWORD)
         } catch { 
-          case e => e.printStackTrace()  
+          case e: Exception => e.printStackTrace()
         } 
       } 
     }
@@ -84,17 +83,17 @@ class ApplicationRunner {
     driver.hasColumnTitles()
   } 
 
-  private def openBiddingFor(auction: FakeAuctionServer, stopPrice: Int) {
+  private def openBiddingFor(auction: FakeAuctionServer, stopPrice: Int): Unit = {
     val itemId = auction.itemId
     driver.startBiddingWithStopPrice(itemId, stopPrice)
     driver.showsSniperStatus(itemId, 0, 0, textFor(SniperState.JOINING))
   }
 
-  private def makeSureAwtIsLoadedBeforeStartingTheDriverOnOSXToStopDeadlock() {
+  private def makeSureAwtIsLoadedBeforeStartingTheDriverOnOSXToStopDeadlock(): Unit = {
     try {
-      SwingUtilities.invokeAndWait(new Runnable() { def run() {} })
+      SwingUtilities.invokeAndWait(new Runnable() { def run(): Unit = {} })
     } catch {
-      case e => throw new AssertionError(e)
+      case e: Exception => throw new AssertionError(e)
     }
   }
 }

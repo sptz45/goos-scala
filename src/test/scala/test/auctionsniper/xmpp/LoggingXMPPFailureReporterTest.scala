@@ -20,12 +20,12 @@ class LoggingXMPPFailureReporterTest {
   val reporter = new LoggingXMPPFailureReporter(logger)
   
   @After
-  def resetLogging() { 
+  def resetLogging(): Unit = { 
     LogManager.getLogManager().reset() 
   } 
   
   @Test 
-  def writesMessageTranslationFailureToLog() { 
+  def writesMessageTranslationFailureToLog(): Unit = { 
     context.checking(new Expectations { 
       oneOf(logger).severe("<auction id> " 
                          + "Could not translate message \"bad message\" " 

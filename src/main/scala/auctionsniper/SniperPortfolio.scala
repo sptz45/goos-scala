@@ -10,18 +10,18 @@ class SniperPortfolio extends SniperCollector {
   private val announcer = Announcer.to[PortfolioListener]
   private val snipers = new ArrayBuffer[AuctionSniper]
   
-  def addSniper(sniper: AuctionSniper) {
+  def addSniper(sniper: AuctionSniper): Unit = {
     snipers += sniper
     announcer.announce().sniperAdded(sniper)
   }
 
-  def addPortfolioListener(listener: PortfolioListener) {
+  def addPortfolioListener(listener: PortfolioListener): Unit = {
     announcer += listener
   }
 }
 
 object SniperPortfolio { 
   trait PortfolioListener extends EventListener {
-    def sniperAdded(sniper: AuctionSniper)
+    def sniperAdded(sniper: AuctionSniper): Unit
   }
 }

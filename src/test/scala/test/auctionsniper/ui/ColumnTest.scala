@@ -9,7 +9,7 @@ import auctionsniper.ui.Column
 class ColumnTest {
 
   @Test
-  def retrievesValuesFromASniperSnapshot() {
+  def retrievesValuesFromASniperSnapshot(): Unit = {
     val snapshot = new SniperSnapshot("item", 123, 34, SniperState.BIDDING)
     assertEquals("item", Column.ITEM_IDENTIFIER.valueIn(snapshot))
     assertEquals(123, Column.LAST_PRICE.valueIn(snapshot))

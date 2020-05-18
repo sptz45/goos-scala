@@ -12,7 +12,7 @@ class XMPPAuctionHouse(connection: XMPPConnection) extends AuctionHouse {
   
   private val failureReporter = new LoggingXMPPFailureReporter(makeLogger())
   
-  def disconnect() {
+  def disconnect(): Unit = {
     connection.disconnect()
   }
   

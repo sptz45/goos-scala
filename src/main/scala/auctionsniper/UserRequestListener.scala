@@ -4,7 +4,7 @@ import java.util.EventListener
 
 trait UserRequestListener extends EventListener {
   
-  def joinAuction(item: UserRequestListener.Item)
+  def joinAuction(item: UserRequestListener.Item): Unit
 }
 
 object UserRequestListener {

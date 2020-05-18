@@ -4,8 +4,7 @@ import auctionsniper.SniperState._
 import org.hamcrest.Matchers._
 import org.junit.Assert.assertThat
 
-
-import org.hamcrest.{FeatureMatcher, Matcher}
+import org.hamcrest.FeatureMatcher
 import org.jmock._
 
 import org.jmock.integration.junit4.JMock
@@ -32,17 +31,17 @@ class AuctionSniperTest {
   private val sniper = new AuctionSniper(ITEM, auction) 
   
   @Before
-  def attachListener() {
+  def attachListener(): Unit = {
     sniper.addSniperListener(sniperListener)
   }
   
   @Test
-  def hasInitialStateOfJoining() {
+  def hasInitialStateOfJoining(): Unit = {
     assertThat(sniper.snapshot, equalTo(SniperSnapshot.joining(ITEM_ID)))
   }
   
   @Test
-  def reportsLostWhenAuctionClosesImmediately() { 
+  def reportsLostWhenAuctionClosesImmediately(): Unit = { 
     context.checking(new Expectations { 
       atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 0, 0, LOST))  
     }) 
@@ -50,7 +49,7 @@ class AuctionSniperTest {
   }
   
   @Test 
-  def bidsHigherAndReportsBiddingWhenNewPriceArrives() { 
+  def bidsHigherAndReportsBiddingWhenNewPriceArrives(): Unit = { 
     val price = 1001
     val increment = 25 
     val bid = price + increment
@@ -65,7 +64,7 @@ class AuctionSniperTest {
   
 
   @Test
-  def doesNotBidAndReportsLosingIfFirstPriceIsAboveStopPrice() {
+  def doesNotBidAndReportsLosingIfFirstPriceIsAboveStopPrice(): Unit = {
     val price = 1233
     val increment = 25
 
@@ -77,7 +76,7 @@ class AuctionSniperTest {
   }
 
   @Test
-  def doesNotBidAndReportsLosingIfSubsequentPriceIsAboveStopPrice() {
+  def doesNotBidAndReportsLosingIfSubsequentPriceIsAboveStopPrice(): Unit = {
     allowingSniperBidding()
     context.checking(new Expectations {
       val bid = 123 + 45
@@ -91,7 +90,7 @@ class AuctionSniperTest {
   }
   
   @Test
-  def doesNotBidAndReportsLosingIfPriceAfterWinningIsAboveStopPrice() {
+  def doesNotBidAndReportsLosingIfPriceAfterWinningIsAboveStopPrice(): Unit = {
     val price = 1233
     val increment = 25
 
@@ -110,7 +109,7 @@ class AuctionSniperTest {
   }
 
   @Test
-  def continuesToBeLosingOnceStopPriceHasBeenReached() {
+  def continuesToBeLosingOnceStopPriceHasBeenReached(): Unit = {
     val states = context.sequence("sniper states")
     val price1 = 1233
     val price2 = 1258
@@ -125,7 +124,7 @@ class AuctionSniperTest {
   }
 
   @Test
-  def reportsLostIfAuctionClosesWhenBidding() { 
+  def reportsLostIfAuctionClosesWhenBidding(): Unit = { 
     allowingSniperBidding()
     ignoringAuction()
     
@@ -139,7 +138,7 @@ class AuctionSniperTest {
   } 
   
   @Test
-  def reportsLostIfAuctionClosesWhenLosing() {
+  def reportsLostIfAuctionClosesWhenLosing(): Unit = {
     allowingSniperLosing()
     context.checking(new Expectations {
       atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 1230, 0, LOST)); 
@@ -153,7 +152,7 @@ class AuctionSniperTest {
 
 
   @Test 
-  def reportsIsWinningWhenCurrentPriceComesFromSniper() { 
+  def reportsIsWinningWhenCurrentPriceComesFromSniper(): Unit = { 
     allowingSniperBidding()
     ignoringAuction()
     context.checking(new Expectations() {
@@ -165,7 +164,7 @@ class AuctionSniperTest {
   } 
   
   @Test 
-  def reportsWonIfAuctionClosesWhenWinning() { 
+  def reportsWonIfAuctionClosesWhenWinning(): Unit = { 
     allowingSniperBidding()
     allowingSniperWinning()
     ignoringAuction()
@@ -180,7 +179,7 @@ class AuctionSniperTest {
   } 
 
   @Test 
-  def reportsFailedIfAuctionFailsWhenBidding() { 
+  def reportsFailedIfAuctionFailsWhenBidding(): Unit = { 
     ignoringAuction()
     allowingSniperBidding()
     
@@ -191,7 +190,7 @@ class AuctionSniperTest {
   } 
   
   @Test
-  def reportsFailedIfAuctionFailsImmediately() {
+  def reportsFailedIfAuctionFailsImmediately(): Unit = {
     context.checking(new Expectations {
       atLeast(1).of(sniperListener).sniperStateChanged(SniperSnapshot.joining(ITEM_ID).failed())
     })
@@ -200,7 +199,7 @@ class AuctionSniperTest {
   }
 
   @Test
-  def reportsFailedIfAuctionFailsWhenLosing() {
+  def reportsFailedIfAuctionFailsWhenLosing(): Unit = {
     allowingSniperLosing()
 
     expectSniperToFailWhenItIs("losing")
@@ -211,7 +210,7 @@ class AuctionSniperTest {
 
 
   @Test
-  def reportsFailedIfAuctionFailsWhenWinning() {
+  def reportsFailedIfAuctionFailsWhenWinning(): Unit = {
     ignoringAuction()
     allowingSniperBidding()
     allowingSniperWinning()
@@ -224,31 +223,31 @@ class AuctionSniperTest {
   }
 
 
-  private def expectSniperToFailWhenItIs(state: String) {
+  private def expectSniperToFailWhenItIs(state: String): Unit = {
     context.checking(new Expectations {
       atLeast(1).of(sniperListener).sniperStateChanged(
-          new SniperSnapshot(ITEM_ID, 00, 0, SniperState.FAILED)); 
+          new SniperSnapshot(ITEM_ID, 0, 0, SniperState.FAILED));
                                       when(sniperState.is(state));
     })
   }
-  private def ignoringAuction() {
+  private def ignoringAuction(): Unit = {
     context.checking(new Expectations { 
       ignoring(auction)
     })
   }
-  private def allowingSniperBidding() {
+  private def allowingSniperBidding(): Unit = {
     allowSniperStateChange(BIDDING, "bidding")
   }
 
-  private def allowingSniperLosing() {
+  private def allowingSniperLosing(): Unit = {
     allowSniperStateChange(LOSING, "losing")
   }
 
-  private def allowingSniperWinning() {
+  private def allowingSniperWinning(): Unit = {
     allowSniperStateChange(WINNING, "winning")
   }
 
-  private def allowSniperStateChange(newState: SniperState, oldState: String) {
+  private def allowSniperStateChange(newState: SniperState, oldState: String): Unit = {
     context.checking(new Expectations { 
       allowing(sniperListener).sniperStateChanged(`with`(aSniperThatIs(newState))); then(sniperState.is(oldState))
     })

@@ -5,26 +5,25 @@ import java.lang.reflect.{InvocationHandler, InvocationTargetException, Method, 
 import java.util.EventListener
 
 class Announcer[T <: EventListener](implicit m: Manifest[T]) {
-  require(m.erasure.isInterface)
+  require(m.runtimeClass.isInterface)
   
   private val listeners = new ArrayBuffer[T]
   
   private val proxy: T = {
-    val listenerType = m.erasure
+    val listenerType = m.runtimeClass
     Proxy.newProxyInstance(listenerType.getClassLoader, Array(listenerType), 
       new InvocationHandler() {
-        def invoke(aProxy: AnyRef, method: Method, args: Array[AnyRef]) = {
+        def invoke(aProxy: AnyRef, method: Method, args: Array[AnyRef]): AnyRef = {
           doAnnounce(method, args)
           null
         }
       }).asInstanceOf[T]
   }
   
-  private def doAnnounce(method: Method, args: Array[AnyRef]) {
+  private def doAnnounce(method: Method, args: Array[AnyRef]): Unit = {
     try {
       for (listener <- listeners)
         method.invoke(listener, args:_*)
-        null
     } catch {
       case e: IllegalAccessException => throw new IllegalArgumentException("could not invoke listener", e)
       case e: InvocationTargetException =>
@@ -36,15 +35,15 @@ class Announcer[T <: EventListener](implicit m: Manifest[T]) {
     }
   }
   
-  def +=(listener: T) {
+  def +=(listener: T): Unit = {
     listeners += listener
   }
   
-  def -=(listener: T) {
+  def -=(listener: T): Unit = {
     listeners -= listener
   }
   
-  def announce() = proxy
+  def announce(): T = proxy
 }
 
 object Announcer {

@@ -4,10 +4,16 @@ lazy val root = (project in file("."))
   .settings(
     name := "goos-scala",
     version := "0.2.13",
-    scalaVersion := "2.13.2",
+    scalaVersion := "2.13.1",
     Defaults.itSettings,
     Test / parallelExecution := false,
     Test / fork := true,
+    inConfig(IntegrationTest)(scalafixConfigSettings(IntegrationTest)),
+    addCompilerPlugin(scalafixSemanticdb), // enable SemanticDB
+    semanticdbEnabled := true, // enable SemanticDB
+    semanticdbVersion := scalafixSemanticdb.revision, // use Scalafix compatible version
+    scalacOptions += "-Ywarn-unused:imports", // required by `RemoveUnused` rule
+    scalacOptions += "-Yrangepos",          // required by SemanticDB compiler plugin
     libraryDependencies ++= Seq(
       "commons-io"                  % "commons-io"         % "2.6",
       "org.apache.commons"          % "commons-lang3"      % "3.10",

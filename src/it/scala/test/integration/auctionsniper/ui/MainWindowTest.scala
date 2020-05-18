@@ -14,10 +14,10 @@ class MainWindowTest {
   private val driver = new AuctionSniperDriver(100) 
   
   @Test 
-  def makesUserRequestWhenJoinButtonClicked() { 
+  def makesUserRequestWhenJoinButtonClicked(): Unit = { 
     val itemProbe = new ValueMatcherProbe[Item](equalTo(new Item("an item-id", 789)), "item request")
     mainWindow.addUserRequestListener(new UserRequestListener() {
-      def joinAuction(item: Item) {
+      def joinAuction(item: Item): Unit = {
         itemProbe.setReceivedValue(item)
       }
     })

@@ -20,19 +20,19 @@ class SnipersTableModel extends AbstractTableModel with SniperListener with Port
   def getValueAt(rowIndex: Int, columnIndex: Int) =
     Column.at(columnIndex).valueIn(snapshots(rowIndex)).asInstanceOf[Object]
   
-  def sniperStateChanged(newSnapshot: SniperSnapshot) {
+  def sniperStateChanged(newSnapshot: SniperSnapshot): Unit = {
     val updated = snapshots.indexWhere(s => newSnapshot.isForSameItemAs(s))
     if (updated == -1) throw new Defect("No existing Sniper state for " + newSnapshot.itemId)
     snapshots(updated) = newSnapshot
     fireTableRowsUpdated(updated, updated)
   }
 
-  def sniperAdded(sniper: AuctionSniper) {
+  def sniperAdded(sniper: AuctionSniper): Unit = {
     addSniperSnapshot(sniper.snapshot)
     sniper.addSniperListener(new SwingThreadSniperListener(this))
   } 
 
-  def addSniperSnapshot(newSniper: SniperSnapshot) {
+  def addSniperSnapshot(newSniper: SniperSnapshot): Unit = {
     snapshots += newSniper
     val row = snapshots.size - 1
     fireTableRowsInserted(row, row)

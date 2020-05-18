@@ -9,7 +9,7 @@ class AuctionSniperEndToEndTest {
   private val application = new ApplicationRunner 
   
   @Test 
-  def sniperJoinsAuctionUntilAuctionCloses() { 
+  def sniperJoinsAuctionUntilAuctionCloses(): Unit = { 
     auction.startSellingItem()                
     application.startBiddingIn(auction)       
     auction.hasReceivedJoinRequestFrom(ApplicationRunner.SNIPER_XMPP_ID) 
@@ -19,7 +19,7 @@ class AuctionSniperEndToEndTest {
 
   
   @Test 
-  def sniperMakesAHigherBidButLoses() { 
+  def sniperMakesAHigherBidButLoses(): Unit = { 
     auction.startSellingItem()
     
     application.startBiddingIn(auction) 
@@ -34,7 +34,7 @@ class AuctionSniperEndToEndTest {
   } 
   
   @Test
-  def sniperWinsAnAuctionByBiddingHigher() { 
+  def sniperWinsAnAuctionByBiddingHigher(): Unit = { 
     auction.startSellingItem()
     
     application.startBiddingIn(auction)
@@ -52,7 +52,7 @@ class AuctionSniperEndToEndTest {
   } 
 
   @Test 
-  def sniperBidsForMultipleItems() { 
+  def sniperBidsForMultipleItems(): Unit = { 
     auction.startSellingItem() 
     auction2.startSellingItem() 
     
@@ -80,7 +80,7 @@ class AuctionSniperEndToEndTest {
   } 
 
   @Test
-  def sniperLosesAnAuctionWhenThePriceIsTooHigh() { 
+  def sniperLosesAnAuctionWhenThePriceIsTooHigh(): Unit = { 
     auction.startSellingItem()
     
     application.startBiddingWithStopPrice(auction, 1100)
@@ -100,7 +100,7 @@ class AuctionSniperEndToEndTest {
   } 
 
   @Test
-  def sniperReportsInvalidAuctionMessageAndStopsRespondingToEvents() { 
+  def sniperReportsInvalidAuctionMessageAndStopsRespondingToEvents(): Unit = { 
     val brokenMessage = "a broken message"
     auction.startSellingItem() 
     auction2.startSellingItem()
@@ -121,19 +121,19 @@ class AuctionSniperEndToEndTest {
     application.hasShownSniperHasFailed(auction)
   } 
   
-  private def waitForAnotherAuctionEvent() { 
+  private def waitForAnotherAuctionEvent(): Unit = { 
     auction2.hasReceivedJoinRequestFrom(ApplicationRunner.SNIPER_XMPP_ID) 
     auction2.reportPrice(600, 6, "other bidder")
     application.hasShownSniperIsBidding(auction2, 600, 606) 
   } 
 
   @After
-  def stopAuction() { 
+  def stopAuction(): Unit = { 
     auction.stop() 
     auction2.stop()
   } 
   @After
-  def stopApplication() { 
+  def stopApplication(): Unit = { 
     application.stop()
   } 
 } 

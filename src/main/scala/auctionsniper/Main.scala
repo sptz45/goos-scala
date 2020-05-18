@@ -12,23 +12,23 @@ class Main {
   
   startUserInterface()
   
-  private def startUserInterface() {
+  private def startUserInterface(): Unit = {
     SwingUtilities.invokeAndWait(new Runnable() {
-      def run() {
+      def run(): Unit = {
         ui = new MainWindow(portfolio)
       }
     })
   }
 
-  private def disconnectWhenUICloses(auctionHouse: XMPPAuctionHouse) { 
+  private def disconnectWhenUICloses(auctionHouse: XMPPAuctionHouse): Unit = { 
     ui.addWindowListener(new WindowAdapter() { 
-      override def windowClosed(e: WindowEvent) { 
+      override def windowClosed(e: WindowEvent): Unit = { 
         auctionHouse.disconnect()
       } 
     }) 
   } 
 
-  private def addUserRequestListenerFor(auctionHouse: AuctionHouse) {
+  private def addUserRequestListenerFor(auctionHouse: AuctionHouse): Unit = {
     ui.addUserRequestListener(new SniperLauncher(auctionHouse, portfolio))
   }
 }
@@ -38,7 +38,7 @@ object Main {
   private val ARG_USERNAME = 1
   private val ARG_PASSWORD = 2
  
-  def main(args: String*) {
+  def main(args: String*): Unit = {
     val main = new Main
     val auctionHouse = XMPPAuctionHouse.connect(args(ARG_HOSTNAME), args(ARG_USERNAME), args(ARG_PASSWORD)) 
     main.disconnectWhenUICloses(auctionHouse)

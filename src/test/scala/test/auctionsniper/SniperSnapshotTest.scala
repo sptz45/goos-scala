@@ -8,7 +8,7 @@ import auctionsniper.{SniperSnapshot => Snapshot, SniperState => State}
 class SniperSnapshotTest {
   
   @Test
-  def transitionsBetweenStates() {
+  def transitionsBetweenStates(): Unit = {
     val itemId = "item id"
     val joining = Snapshot.joining(itemId)
     
@@ -24,7 +24,7 @@ class SniperSnapshotTest {
   }
 
   @Test
-  def comparesItemIdentities() {
+  def comparesItemIdentities(): Unit = {
     assertTrue(Snapshot.joining("item 1").isForSameItemAs(Snapshot.joining("item 1")))
     assertFalse(Snapshot.joining("item 1").isForSameItemAs (Snapshot.joining("item 2")))
   }

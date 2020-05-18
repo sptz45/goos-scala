@@ -1,7 +1,7 @@
 package auctionsniper
 
 trait Auction {
-  def join()
-  def bid(amount: Int)
-  def addAuctionEventListener(listener: AuctionEventListener)
+  def join(): Unit
+  def bid(amount: Int): Unit
+  def addAuctionEventListener(listener: AuctionEventListener): Unit
 }

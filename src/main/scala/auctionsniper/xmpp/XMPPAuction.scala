@@ -1,6 +1,6 @@
 package auctionsniper.xmpp
 
-import org.jivesoftware.smack.{Chat, XMPPConnection, XMPPException}
+import org.jivesoftware.smack.{XMPPConnection, XMPPException}
 import auctionsniper.{Auction, AuctionEventListener, PriceSource}
 import auctionsniper.util.Announcer
 
@@ -16,15 +16,15 @@ class XMPPAuction(
   private val chat = connection.getChatManager.createChat(auctionJID, translator)
   addAuctionEventListener(chatDisconnectorFor(translator))
    
-  def bid(amount: Int) { 
+  def bid(amount: Int): Unit = { 
     sendMessage(BID_COMMAND_FORMAT.format(amount)) 
   } 
   
-  def join() { 
+  def join(): Unit = { 
     sendMessage(JOIN_COMMAND_FORMAT)
   }
   
-  final def addAuctionEventListener(listener: AuctionEventListener) {
+  final def addAuctionEventListener(listener: AuctionEventListener): Unit = {
     auctionEventListeners += listener
   }
   
@@ -32,12 +32,12 @@ class XMPPAuction(
     new AuctionMessageTranslator(connection.getUser, auctionEventListeners.announce(), failureReporter)
   
   private def chatDisconnectorFor(translator: AuctionMessageTranslator) = new AuctionEventListener() { 
-    def auctionFailed() { chat.removeMessageListener(translator) }
-    def auctionClosed() { }
-    def currentPrice(price: Int, increment: Int, priceSource: PriceSource) { } 
+    def auctionFailed(): Unit = { chat.removeMessageListener(translator) }
+    def auctionClosed(): Unit = { }
+    def currentPrice(price: Int, increment: Int, priceSource: PriceSource): Unit = { } 
   }
   
-  private def sendMessage(message: String) { 
+  private def sendMessage(message: String): Unit = { 
     try {
       chat.sendMessage(message)
     } catch {

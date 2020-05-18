@@ -1,7 +1,7 @@
 package test.auctionsniper
 
 import org.hamcrest.FeatureMatcher
-import org.jmock.{Expectations, Mockery, States}
+import org.jmock.{Expectations, Mockery}
 import org.jmock.integration.junit4.JMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +23,7 @@ class SniperLauncherTest {
   private val launcher = new SniperLauncher(auctionHouse, sniperCollector)
   
   @Test
-  def addsNewSniperToCollectorAndThenJoinsAuction() {
+  def addsNewSniperToCollectorAndThenJoinsAuction(): Unit = {
     val item = new Item("item 123", 456)
 
     context.checking(new Expectations() {

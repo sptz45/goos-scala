@@ -23,7 +23,7 @@ class AuctionMessageTranslatorTest {
   private val translator = new AuctionMessageTranslator(SNIPER_ID, listener, failureReporter)
   
   @Test 
-  def notifiesAuctionClosedWhenCloseMessageReceived() { 
+  def notifiesAuctionClosedWhenCloseMessageReceived(): Unit = { 
     context.checking(new Expectations { 
       exactly(1).of(listener).auctionClosed() 
     }) 
@@ -35,7 +35,7 @@ class AuctionMessageTranslatorTest {
   } 
   
   @Test
-  def notifiesBidDetailsWhenCurrentPriceMessageReceivedFromOtherBidder() { 
+  def notifiesBidDetailsWhenCurrentPriceMessageReceivedFromOtherBidder(): Unit = { 
     context.checking(new Expectations { 
       exactly(1).of(listener).currentPrice(192, 7, PriceSource.FromOtherBidder) 
     }) 
@@ -47,7 +47,7 @@ class AuctionMessageTranslatorTest {
   } 
 
   @Test
-  def notifiesBidDetailsWhenCurrentPriceMessageReceivedFromSniper() { 
+  def notifiesBidDetailsWhenCurrentPriceMessageReceivedFromSniper(): Unit = { 
     context.checking(new Expectations { 
       exactly(1).of(listener).currentPrice(192, 7, PriceSource.FromSniper) 
     })
@@ -59,7 +59,7 @@ class AuctionMessageTranslatorTest {
   } 
 
   @Test 
-  def notifiesAuctionFailedWhenBadMessageReceived() { 
+  def notifiesAuctionFailedWhenBadMessageReceived(): Unit = { 
     val badMessage = "a bad message"
     expectFailureWithMessage(badMessage)
     
@@ -67,7 +67,7 @@ class AuctionMessageTranslatorTest {
   } 
 
   @Test 
-  def notifiesAuctionFailedWhenEventTypeMissing() { 
+  def notifiesAuctionFailedWhenEventTypeMissing(): Unit = { 
     val badMessage = "SOLVersion: 1.1; CurrentPrice: 234; Increment: 5; Bidder: " + SNIPER_ID + ";"
     expectFailureWithMessage(badMessage)
 
@@ -80,7 +80,7 @@ class AuctionMessageTranslatorTest {
     message
   } 
   
-  private def expectFailureWithMessage(badMessage: String) { 
+  private def expectFailureWithMessage(badMessage: String): Unit = { 
     context.checking(new Expectations {  
       oneOf(listener).auctionFailed() 
       oneOf(failureReporter).cannotTranslateMessage( 

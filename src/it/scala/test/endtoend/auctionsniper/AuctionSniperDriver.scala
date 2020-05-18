@@ -21,21 +21,21 @@ extends JFrameDriver(
     ComponentDriver.showingOnScreen()), 
     new AWTEventQueueProber(timeoutMillis, 100)) {
   
-  def hasColumnTitles() {
+  def hasColumnTitles(): Unit = {
     val headers = new JTableHeaderDriver(this, classOf[JTableHeader]) 
     headers.hasHeaders(
        matching(withLabelText("Item"), withLabelText("Last Price"), 
                 withLabelText("Last Bid"), withLabelText("State")))
   }
 
-  def showsSniperStatus(itemId: String, lastPrice: Int, lastBid: Int, statusText: String) {
+  def showsSniperStatus(itemId: String, lastPrice: Int, lastBid: Int, statusText: String): Unit = {
     val table = new JTableDriver(this) 
     table.hasRow(
       matching(withLabelText(itemId), withLabelText(valueOf(lastPrice)), 
                withLabelText(valueOf(lastBid)), withLabelText(statusText)))
   }
 
-  def startBiddingWithStopPrice(itemId: String, stopPrice: Int) {
+  def startBiddingWithStopPrice(itemId: String, stopPrice: Int): Unit = {
     textField(NEW_ITEM_ID_NAME).replaceAllText(itemId)
     textField(NEW_ITEM_STOP_PRICE_NAME).replaceAllText(stopPrice.toString) 
     bidButton().click()
