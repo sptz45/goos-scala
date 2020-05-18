@@ -4,11 +4,9 @@ import java.util.concurrent.{ArrayBlockingQueue, TimeUnit}
 
 import org.hamcrest.Matchers._
 import org.junit.Assert.assertThat
-
-import org.hamcrest.Matcher;
+import org.hamcrest.{Matcher, Matchers}
 import org.jivesoftware.smack.{Chat, ChatManagerListener, MessageListener, XMPPConnection, XMPPException}
 import org.jivesoftware.smack.packet.Message
-
 import auctionsniper.xmpp.XMPPAuction
 
 class FakeAuctionServer(val itemId: String) {
@@ -73,25 +71,12 @@ class FakeAuctionServer(val itemId: String) {
     } 
     
     def receivesAMessage() {
-      assertThat("Message", messages.poll(5, TimeUnit.SECONDS), is(notNullValue[Message]))
+      assertThat("Message", messages.poll(5, TimeUnit.SECONDS), is(notNullValue(classOf[Message])))
     }
 
     def receivesAMessage[T >: String](messageMatcher: Matcher[T]) {
       val message = messages.poll(5, TimeUnit.SECONDS)
-      //XXX crashes the compiler: assertThat(message, hasProperty("body", messageMatcher))
-      assertThatReplacementForBug2705(message, hasProperty("body", messageMatcher))
-    }
-    
-    //XXX temporary workaround for bug: https://lampsvn.epfl.ch/trac/scala/ticket/2705
-    private def assertThatReplacementForBug2705[A, M >: A](actual: A, matcher: Matcher[M]) {
-      if (!matcher.matches(actual)) {
-        val description = new org.hamcrest.StringDescription()
-        description.appendText("\nExpected: ")
-                   .appendDescriptionOf(matcher)
-                   .appendText("\n     but: ")
-        matcher.describeMismatch(actual, description)
-        throw new AssertionError(description.toString)
-      }
+      assertThat(message, hasProperty("body", messageMatcher))
     }
   }
 }

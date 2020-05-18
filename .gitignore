@@ -1,3 +1,8 @@
 build/
-.scala_dependencies
-auction-sniper.log
+auction-sniper.log*
+.idea
+.idea_modules
+target
+logs
+*.iml
+*.DS_Store

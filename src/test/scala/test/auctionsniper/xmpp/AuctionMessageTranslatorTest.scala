@@ -7,7 +7,7 @@ import org.jmock.integration.junit4.JMock
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import org.jmock.Expectations._
+import org.jmock.AbstractExpectations._
 
 import auctionsniper.{AuctionEventListener, PriceSource}
 import auctionsniper.xmpp.{AuctionMessageTranslator, XMPPFailureReporter}

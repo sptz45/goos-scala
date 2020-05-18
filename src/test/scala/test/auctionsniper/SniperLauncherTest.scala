@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.hamcrest.Matchers._
-import org.jmock.Expectations._
+import org.jmock.AbstractExpectations._
 
 import auctionsniper._
 import auctionsniper.UserRequestListener.Item;
