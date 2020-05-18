@@ -24,5 +24,8 @@ lazy val root = (project in file("."))
       "com.novocode"                % "junit-interface"    % "0.11" % "it,test",
       "org.jmock"                   % "jmock-junit4"       % "2.12.0" % "it,test",
       "com.googlecode.windowlicker" % "windowlicker-swing" % "r268" % "it,test"
-    )
+    ),
+    addCommandAlias("compileAll", "compile;test:compile;it:compile"),
+    addCommandAlias("testAll", "test;it:test"),
+    addCommandAlias("build", "clean;compileAll;testAll")
   )
