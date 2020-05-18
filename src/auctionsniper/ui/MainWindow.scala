@@ -16,7 +16,7 @@ class MainWindow(portfolio: SniperPortfolio) extends JFrame("Auction Sniper") {
   setName(MainWindow.MAIN_WINDOW_NAME)
   fillContentPane(makeSnipersTable(portfolio), makeControls())
   pack() 
-  setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE) 
+  setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE) 
   setVisible(true)
   
   def addUserRequestListener(listener: UserRequestListener) {
