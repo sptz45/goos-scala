@@ -8,6 +8,9 @@ lazy val root = (project in file("."))
     Defaults.itSettings,
     Test / parallelExecution := false,
     Test / fork := true,
+    IntegrationTest / unmanagedBase := baseDirectory.value / "testlib",
+    IntegrationTest / parallelExecution := false,
+    IntegrationTest / fork := true,
     inConfig(IntegrationTest)(scalafixConfigSettings(IntegrationTest)),
     addCompilerPlugin(scalafixSemanticdb), // enable SemanticDB
     semanticdbEnabled := true, // enable SemanticDB
@@ -20,10 +23,9 @@ lazy val root = (project in file("."))
       "org.apache.commons"          % "commons-lang3"      % "3.10",
       "org.igniterealtime.smack"    % "smack"              % "3.2.1",
       "org.igniterealtime.smack"    % "smackx"             % "3.2.1",
-      "junit"                       % "junit"              % "4.11" % "it,test",
-      "com.novocode"                % "junit-interface"    % "0.11" % "it,test",
-      "org.jmock"                   % "jmock-junit4"       % "2.12.0" % "it,test",
-      "com.googlecode.windowlicker" % "windowlicker-swing" % "r268" % "it,test"
+      "junit"                       % "junit"              % "4.11"   % "it,test",
+      "com.novocode"                % "junit-interface"    % "0.11"   % "it,test",
+      "org.jmock"                   % "jmock-junit4"       % "2.12.0" % "it,test"
     ),
     addCommandAlias("compileAll", "compile;test:compile;it:compile"),
     addCommandAlias("testAll", "test;it:test"),
