@@ -1,24 +1,20 @@
 package test.auctionsniper
 
-import org.jmock.{Expectations, Mockery}
-import org.jmock.integration.junit4.JMock
-import org.junit.Test
-import org.junit.runner.RunWith
-
-import auctionsniper.{AuctionSniper, SniperPortfolio}
-import auctionsniper.UserRequestListener.Item
 import auctionsniper.SniperPortfolio.PortfolioListener
+import auctionsniper.UserRequestListener.Item
+import auctionsniper.{AuctionSniper, SniperPortfolio}
+import org.jmock.Expectations
+import test.fixtures.JMockSuite
 
-@RunWith(classOf[JMock])
-class SniperPortfolioTest {
-  val context = new Mockery
-  val listener = context.mock(classOf[PortfolioListener])
-  val portfolio = new SniperPortfolio
-  
-  @Test
-  def notifiesListenersOfNewSnipers(): Unit = {
+class SniperPortfolioTest extends JMockSuite {
+
+  test("notifies listeners of new snipers") {
+
+    val listener = context().mock(classOf[PortfolioListener])
+    val portfolio = new SniperPortfolio
+
     val sniper = new AuctionSniper(Item("item id", 123), null)
-    context.checking(new Expectations {
+    context().checking(new Expectations {
       oneOf(listener).sniperAdded(sniper)
     })
     portfolio.addPortfolioListener(listener)

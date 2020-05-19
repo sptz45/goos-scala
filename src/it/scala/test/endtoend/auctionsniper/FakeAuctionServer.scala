@@ -3,11 +3,11 @@ package test.endtoend.auctionsniper
 import java.util.concurrent.{ArrayBlockingQueue, TimeUnit}
 
 import org.hamcrest.Matchers._
-import org.junit.Assert.assertThat
 import org.hamcrest.Matcher
 import org.jivesoftware.smack.{Chat, ChatManagerListener, MessageListener, XMPPConnection}
 import org.jivesoftware.smack.packet.Message
 import auctionsniper.xmpp.XMPPAuction
+import org.hamcrest.MatcherAssert.assertThat
 
 class FakeAuctionServer(val itemId: String) {
   import FakeAuctionServer._
@@ -76,7 +76,7 @@ class FakeAuctionServer(val itemId: String) {
 
     def receivesAMessage[T >: String](messageMatcher: Matcher[T]): Unit = {
       val message = messages.poll(5, TimeUnit.SECONDS)
-      assertThat(message, hasProperty("body", messageMatcher))
+      assertThat(message, hasProperty("body", messageMatcher): Matcher[Message])
     }
   }
 }

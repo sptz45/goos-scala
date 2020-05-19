@@ -6,8 +6,8 @@ import java.util.logging.LogManager
 
 import org.apache.commons.io.FileUtils
 import org.hamcrest.Matcher
-import org.junit.Assert.assertThat
 import auctionsniper.xmpp.XMPPAuctionHouse
+import org.hamcrest.MatcherAssert.assertThat
 
 class AuctionLogDriver {
   private val logFile = new File(XMPPAuctionHouse.LOG_FILE_NAME)

@@ -1,32 +1,27 @@
 package test.auctionsniper
 
+import auctionsniper.UserRequestListener.Item
+import auctionsniper._
 import org.hamcrest.FeatureMatcher
-import org.jmock.{Expectations, Mockery}
-import org.jmock.integration.junit4.JMock;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import org.hamcrest.Matchers._
 import org.jmock.AbstractExpectations._
+import org.jmock.Expectations
+import test.fixtures.JMockSuite
 
-import auctionsniper._
-import auctionsniper.UserRequestListener.Item;
+class SniperLauncherTest extends JMockSuite {
 
-@RunWith(classOf[JMock])
-class SniperLauncherTest {
-  
-  private val context = new Mockery
-  private val auctionState = context.states("auction state").startsAs("not joined")
-  private val auction = context.mock(classOf[Auction])
-  private val auctionHouse = context.mock(classOf[AuctionHouse])
-  private val sniperCollector = context.mock(classOf[SniperCollector])
-  private val launcher = new SniperLauncher(auctionHouse, sniperCollector)
-  
-  @Test
-  def addsNewSniperToCollectorAndThenJoinsAuction(): Unit = {
+  test("adds new sniper to collector and then joins auction") {
+
+    val auctionState = context().states("auction state").startsAs("not joined")
+    val auction = context().mock(classOf[Auction])
+    val auctionHouse = context().mock(classOf[AuctionHouse])
+    val sniperCollector = context().mock(classOf[SniperCollector])
+    val launcher = new SniperLauncher(auctionHouse, sniperCollector)
+
     val item = Item("item 123", 456)
 
-    context.checking(new Expectations() {
+    context().checking(new Expectations() {
+
       allowing(auctionHouse).auctionFor(item); will(returnValue(auction))
 
       oneOf(auction).addAuctionEventListener(`with`(sniperForItem(item))); when(auctionState.is("not joined"))

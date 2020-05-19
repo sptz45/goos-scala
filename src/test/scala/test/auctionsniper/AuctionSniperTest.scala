@@ -2,58 +2,63 @@ package test.auctionsniper
 
 import auctionsniper.SniperState._
 import org.hamcrest.Matchers._
-import org.junit.Assert.assertThat
-
+import org.hamcrest.MatcherAssert._
 import org.hamcrest.FeatureMatcher
 import org.jmock._
-
-import org.jmock.integration.junit4.JMock
-import org.junit.{Before, Test}
-import org.junit.runner.RunWith
-
 import auctionsniper._
 import auctionsniper.PriceSource
 import auctionsniper.UserRequestListener.Item
+import test.fixtures.JMockSuite
 
-object AuctionSniperTest { 
-  protected val ITEM_ID = "item-id"
-  val ITEM = new Item(ITEM_ID, 1234)
-}
 
-@RunWith(classOf[JMock]) 
-class AuctionSniperTest {
-  import AuctionSniperTest._
-  
-  private val context = new Mockery
-  private val sniperState = context.states("sniper")
-  private val auction = context.mock(classOf[Auction])
-  private val sniperListener = context.mock(classOf[SniperListener])
-  private val sniper = new AuctionSniper(ITEM, auction) 
-  
-  @Before
-  def attachListener(): Unit = {
-    sniper.addSniperListener(sniperListener)
-  }
-  
-  @Test
-  def hasInitialStateOfJoining(): Unit = {
+class AuctionSniperTest  extends JMockSuite {
+
+  private val ITEM_ID = "item-id"
+  private val ITEM: Item = Item(ITEM_ID, 1234)
+
+  case class TestFixture(
+    sniperState: States,
+    auction: Auction,
+    sniperListener: SniperListener,
+    sniper: AuctionSniper
+  )
+
+  private val withFixture = FunFixture[TestFixture](
+    setup = _ => {
+
+      val sniperState = context().states("sniper")
+      val auction = context().mock(classOf[Auction])
+      val sniperListener = context().mock(classOf[SniperListener])
+      val sniper = new AuctionSniper(ITEM, auction)
+
+      sniper.addSniperListener(sniperListener)
+
+      TestFixture(sniperState, auction, sniperListener, sniper)
+    },
+    teardown = _ => ()
+  )
+
+
+  withFixture.test("has initial state of joining") { implicit fixture =>
+    import fixture._
     assertThat(sniper.snapshot, equalTo(SniperSnapshot.joining(ITEM_ID)))
   }
-  
-  @Test
-  def reportsLostWhenAuctionClosesImmediately(): Unit = { 
-    context.checking(new Expectations { 
+
+  withFixture.test("reports lost when auction closes immediately") { implicit fixture =>
+    import fixture._
+    context().checking(new Expectations {
       atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 0, 0, LOST))  
     }) 
     sniper.auctionClosed() 
   }
   
-  @Test 
-  def bidsHigherAndReportsBiddingWhenNewPriceArrives(): Unit = { 
+
+  withFixture.test("bids higher and reports bidding when new price arrives") { implicit fixture =>
+    import fixture._
     val price = 1001
     val increment = 25 
     val bid = price + increment
-    context.checking(new Expectations { 
+    context().checking(new Expectations {
       oneOf(auction).bid(bid)
 
       atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, price, bid, BIDDING))
@@ -63,22 +68,22 @@ class AuctionSniperTest {
   } 
   
 
-  @Test
-  def doesNotBidAndReportsLosingIfFirstPriceIsAboveStopPrice(): Unit = {
+  withFixture.test("doesNotBidAndReportsLosingIfFirstPriceIsAboveStopPrice") { implicit fixture =>
+    import fixture._
     val price = 1233
     val increment = 25
 
-    context.checking(new Expectations {
+    context().checking(new Expectations {
       atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, price, 0, LOSING))
     })
     
     sniper.currentPrice(price, increment, PriceSource.FromOtherBidder)
   }
 
-  @Test
-  def doesNotBidAndReportsLosingIfSubsequentPriceIsAboveStopPrice(): Unit = {
+  withFixture.test("does not bid and reports losing if subsequent price is above stop price") { implicit fixture =>
+    import fixture._
     allowingSniperBidding()
-    context.checking(new Expectations {
+    context().checking(new Expectations {
       private val bid = 123 + 45
       allowing(auction).bid(bid)
       
@@ -88,15 +93,15 @@ class AuctionSniperTest {
     sniper.currentPrice(123, 45, PriceSource.FromOtherBidder)
     sniper.currentPrice(2345, 25, PriceSource.FromOtherBidder)
   }
-  
-  @Test
-  def doesNotBidAndReportsLosingIfPriceAfterWinningIsAboveStopPrice(): Unit = {
+
+  withFixture.test("does not bid and reports losing if price after winning is above stop price") { implicit fixture =>
+    import fixture._
     val price = 1233
     val increment = 25
 
     allowingSniperBidding()
     allowingSniperWinning()
-    context.checking(new Expectations {
+    context().checking(new Expectations {
       private val bid = 123 + 45
       allowing(auction).bid(bid)
       
@@ -108,13 +113,13 @@ class AuctionSniperTest {
     sniper.currentPrice(price, increment, PriceSource.FromOtherBidder)
   }
 
-  @Test
-  def continuesToBeLosingOnceStopPriceHasBeenReached(): Unit = {
-    val states = context.sequence("sniper states")
+  withFixture.test("continues to be losing once stop price has been reached") { implicit fixture =>
+    import fixture._
+    val states = context().sequence("sniper states")
     val price1 = 1233
     val price2 = 1258
 
-    context.checking(new Expectations {
+    context().checking(new Expectations {
       atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, price1, 0, LOSING)); inSequence(states)
       atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, price2, 0, LOSING)); inSequence(states)
     })
@@ -123,12 +128,12 @@ class AuctionSniperTest {
     sniper.currentPrice(price2, 25, PriceSource.FromOtherBidder)
   }
 
-  @Test
-  def reportsLostIfAuctionClosesWhenBidding(): Unit = { 
+  withFixture.test("reports lost if auction closes when bidding") { implicit fixture =>
+    import fixture._
     allowingSniperBidding()
     ignoringAuction()
     
-    context.checking(new Expectations {
+    context().checking(new Expectations {
       atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 123, 168, LOST))
       when(sniperState.is("bidding"))
     })
@@ -136,11 +141,11 @@ class AuctionSniperTest {
     sniper.currentPrice(123, 45, PriceSource.FromOtherBidder)
     sniper.auctionClosed()
   } 
-  
-  @Test
-  def reportsLostIfAuctionClosesWhenLosing(): Unit = {
+
+  withFixture.test("reports lost if auction closes when losing") { implicit fixture =>
+    import fixture._
     allowingSniperLosing()
-    context.checking(new Expectations {
+    context().checking(new Expectations {
       atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, 1230, 0, LOST))
       when(sniperState.is("losing"))
     })
@@ -151,11 +156,12 @@ class AuctionSniperTest {
 
 
 
-  @Test 
-  def reportsIsWinningWhenCurrentPriceComesFromSniper(): Unit = { 
+
+  withFixture.test("reports is winning when current price comes from sniper") { implicit fixture =>
+    import fixture._
     allowingSniperBidding()
     ignoringAuction()
-    context.checking(new Expectations() {
+    context().checking(new Expectations() {
       atLeast(1).of(sniperListener).sniperStateChanged( new SniperSnapshot(ITEM_ID, 135, 135, WINNING)); when(sniperState.is("bidding"))
     })
     
@@ -163,13 +169,14 @@ class AuctionSniperTest {
     sniper.currentPrice(135, 45, PriceSource.FromSniper)
   } 
   
-  @Test 
-  def reportsWonIfAuctionClosesWhenWinning(): Unit = { 
+
+  withFixture.test("reports won if auction closes when winning") { implicit fixture =>
+    import fixture._
     allowingSniperBidding()
     allowingSniperWinning()
     ignoringAuction()
     
-    context.checking(new Expectations() { 
+    context().checking(new Expectations() {
       atLeast(1).of(sniperListener).sniperStateChanged( new SniperSnapshot(ITEM_ID, 135, 135, WON)); when(sniperState.is("winning"))
     })
     
@@ -178,8 +185,9 @@ class AuctionSniperTest {
     sniper.auctionClosed()
   } 
 
-  @Test 
-  def reportsFailedIfAuctionFailsWhenBidding(): Unit = { 
+
+  withFixture.test("reports failed if auction fails when bidding") { implicit fixture =>
+    import fixture._
     ignoringAuction()
     allowingSniperBidding()
     
@@ -188,18 +196,18 @@ class AuctionSniperTest {
     sniper.currentPrice(123, 45, PriceSource.FromOtherBidder) 
     sniper.auctionFailed() 
   } 
-  
-  @Test
-  def reportsFailedIfAuctionFailsImmediately(): Unit = {
-    context.checking(new Expectations {
+
+  withFixture.test("reports failed if auction fails immediately") { implicit fixture =>
+    import fixture._
+    context().checking(new Expectations {
       atLeast(1).of(sniperListener).sniperStateChanged(SniperSnapshot.joining(ITEM_ID).failed())
     })
     
     sniper.auctionFailed()
   }
 
-  @Test
-  def reportsFailedIfAuctionFailsWhenLosing(): Unit = {
+  withFixture.test("reports failed if auction fails when losing") { implicit fixture =>
+    import fixture._
     allowingSniperLosing()
 
     expectSniperToFailWhenItIs("losing")
@@ -209,8 +217,8 @@ class AuctionSniperTest {
   }
 
 
-  @Test
-  def reportsFailedIfAuctionFailsWhenWinning(): Unit = {
+  withFixture.test("reports failed if auction fails when winning") { implicit fixture =>
+    import fixture._
     ignoringAuction()
     allowingSniperBidding()
     allowingSniperWinning()
@@ -223,33 +231,33 @@ class AuctionSniperTest {
   }
 
 
-  private def expectSniperToFailWhenItIs(state: String): Unit = {
-    context.checking(new Expectations {
-      atLeast(1).of(sniperListener).sniperStateChanged(
+  private def expectSniperToFailWhenItIs(state: String)(implicit f: TestFixture): Unit = {
+    context().checking(new Expectations {
+      atLeast(1).of(f.sniperListener).sniperStateChanged(
           new SniperSnapshot(ITEM_ID, 0, 0, SniperState.FAILED))
-      when(sniperState.is(state))
+      when(f.sniperState.is(state))
     })
   }
-  private def ignoringAuction(): Unit = {
-    context.checking(new Expectations { 
-      ignoring(auction)
+  private def ignoringAuction()(implicit f: TestFixture): Unit = {
+    context().checking(new Expectations {
+      ignoring(f.auction)
     })
   }
-  private def allowingSniperBidding(): Unit = {
+  private def allowingSniperBidding()(implicit f: TestFixture): Unit = {
     allowSniperStateChange(BIDDING, "bidding")
   }
 
-  private def allowingSniperLosing(): Unit = {
+  private def allowingSniperLosing()(implicit f: TestFixture): Unit = {
     allowSniperStateChange(LOSING, "losing")
   }
 
-  private def allowingSniperWinning(): Unit = {
+  private def allowingSniperWinning()(implicit f: TestFixture): Unit = {
     allowSniperStateChange(WINNING, "winning")
   }
 
-  private def allowSniperStateChange(newState: SniperState, oldState: String): Unit = {
-    context.checking(new Expectations { 
-      allowing(sniperListener).sniperStateChanged(`with`(aSniperThatIs(newState))); `then`(sniperState.is(oldState))
+  private def allowSniperStateChange(newState: SniperState, oldState: String)(implicit f: TestFixture): Unit = {
+    context().checking(new Expectations {
+      allowing(f.sniperListener).sniperStateChanged(`with`(aSniperThatIs(newState))); `then`(f.sniperState.is(oldState))
     })
   }
 

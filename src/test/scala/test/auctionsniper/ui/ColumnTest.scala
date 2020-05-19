@@ -1,19 +1,15 @@
 package test.auctionsniper.ui
 
-import org.junit.Test
-import org.junit.Assert.assertEquals
-
-import auctionsniper.{SniperSnapshot, SniperState}
 import auctionsniper.ui.Column
+import auctionsniper.{SniperSnapshot, SniperState}
 
-class ColumnTest {
+class ColumnTest extends munit.FunSuite {
 
-  @Test
-  def retrievesValuesFromASniperSnapshot(): Unit = {
+  test("retrieves values from a SniperSnapshot") {
     val snapshot = new SniperSnapshot("item", 123, 34, SniperState.BIDDING)
-    assertEquals("item", Column.ITEM_IDENTIFIER.valueIn(snapshot))
-    assertEquals(123, Column.LAST_PRICE.valueIn(snapshot))
-    assertEquals(34, Column.LAST_BID.valueIn(snapshot))
-    assertEquals("Bidding", Column.SNIPER_STATE.valueIn(snapshot))
+    assertEquals(Column.ITEM_IDENTIFIER.valueIn(snapshot), "item")
+    assertEquals(Column.LAST_PRICE.valueIn(snapshot), 123)
+    assertEquals(Column.LAST_BID.valueIn(snapshot), 34)
+    assertEquals(Column.SNIPER_STATE.valueIn(snapshot), "Bidding")
   }
 }

@@ -23,10 +23,12 @@ lazy val root = (project in file("."))
       "org.apache.commons"          % "commons-lang3"      % "3.10",
       "org.igniterealtime.smack"    % "smack"              % "3.2.1",
       "org.igniterealtime.smack"    % "smackx"             % "3.2.1",
-      "junit"                       % "junit"              % "4.11"   % "it,test",
-      "com.novocode"                % "junit-interface"    % "0.11"   % "it,test",
-      "org.jmock"                   % "jmock-junit4"       % "2.12.0" % "it,test"
+      "org.jmock"                   % "jmock"              % "2.12.0" % "test",
+      "org.jmock"                   % "jmock-imposters"    % "2.12.0" % "test",
+      "org.scalameta"              %% "munit"              % "0.7.7"  % "it,test",
+
     ),
+    testFrameworks += new TestFramework("munit.Framework"),
     addCommandAlias("compileAll", "compile;test:compile;it:compile"),
     addCommandAlias("testAll", "test;it:test"),
     addCommandAlias("build", "clean;compileAll;testAll")

@@ -1,28 +1,26 @@
 package test.auctionsniper
 
-import org.junit.Test
-import org.junit.Assert._
-
 import auctionsniper.util.Defect
 
-class SniperStateTests {
+class SniperStateTests extends munit.FunSuite {
   
-  import auctionsniper.SniperState._ 
+  import auctionsniper.SniperState._
 
-  @Test
-  def isWonWhenAuctionClosesWhileWinning(): Unit = {
-    assertEquals(LOST, JOINING.whenAuctionClosed)
-    assertEquals(LOST, BIDDING.whenAuctionClosed)
-    assertEquals(WON,  WINNING.whenAuctionClosed)
-  }
-  
-  @Test(expected=classOf[Defect])
-  def defectIfAuctionClosesWhenWon(): Unit = {
-    WON.whenAuctionClosed
+  test("is won when auction closes while winning") {
+    assertEquals(JOINING.whenAuctionClosed, LOST)
+    assertEquals(BIDDING.whenAuctionClosed, LOST)
+    assertEquals(WINNING.whenAuctionClosed, WON)
   }
 
-  @Test(expected=classOf[Defect])
-  def defectIfAuctionClosesWhenLost(): Unit = {
-    LOST.whenAuctionClosed
+  test("defect if auction closes when won") {
+    intercept[Defect] {
+      WON.whenAuctionClosed
+    }
+  }
+
+  test("defect if auction closes when lost") {
+    intercept[Defect] {
+      LOST.whenAuctionClosed
+    }
   }
 }

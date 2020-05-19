@@ -2,31 +2,25 @@ package test.auctionsniper.xmpp
 
 import java.util.logging.{LogManager, Logger}
 
-import org.jmock.{Expectations, Mockery}
-import org.jmock.integration.junit4.JMock
-import org.jmock.lib.legacy.ClassImposteriser
-import org.junit.{After, Test}
-import org.junit.runner.RunWith
-
 import auctionsniper.xmpp.LoggingXMPPFailureReporter
+import org.jmock.imposters.ByteBuddyClassImposteriser
+import org.jmock.{Expectations, Mockery}
+import test.fixtures.JMockSuite
 
-@RunWith(classOf[JMock]) 
-class LoggingXMPPFailureReporterTest {
-  
-  val context = new Mockery { 
-    setImposteriser(ClassImposteriser.INSTANCE) 
-  } 
-  val logger = context.mock(classOf[Logger]) 
-  val reporter = new LoggingXMPPFailureReporter(logger)
-  
-  @After
-  def resetLogging(): Unit = { 
+class LoggingXMPPFailureReporterTest extends JMockSuite {
+
+  override def configureJMock(mockery: Mockery): Unit =
+    mockery.setImposteriser(ByteBuddyClassImposteriser.INSTANCE)
+
+  override def afterEach(context: AfterEach): Unit =
     LogManager.getLogManager.reset()
-  } 
   
-  @Test 
-  def writesMessageTranslationFailureToLog(): Unit = { 
-    context.checking(new Expectations { 
+
+  test("writes message translation failure to log") {
+    val logger = context().mock(classOf[Logger])
+    val reporter = new LoggingXMPPFailureReporter(logger)
+
+    context().checking(new Expectations {
       oneOf(logger).severe("<auction id> " 
                          + "Could not translate message \"bad message\" " 
                          + "because \"java.lang.Exception: an exception\"") 
