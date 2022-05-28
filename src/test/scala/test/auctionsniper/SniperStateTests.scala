@@ -2,9 +2,9 @@ package test.auctionsniper
 
 import auctionsniper.util.Defect
 
-class SniperStateTests extends munit.FunSuite {
+class SniperStateTests extends munit.FunSuite:
   
-  import auctionsniper.SniperState._
+  import auctionsniper.SniperState.*
 
   test("is won when auction closes while winning") {
     assertEquals(JOINING.whenAuctionClosed, LOST)
@@ -23,4 +23,3 @@ class SniperStateTests extends munit.FunSuite {
       LOST.whenAuctionClosed
     }
   }
-}

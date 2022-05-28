@@ -2,15 +2,12 @@ package auctionsniper
 
 import java.util.EventListener
 
-trait UserRequestListener extends EventListener {
-  
+trait UserRequestListener extends EventListener:
   def joinAuction(item: UserRequestListener.Item): Unit
-}
 
-object UserRequestListener {
+
+object UserRequestListener:
   
-  case class Item(identifier: String, stopPrice: Int) {
-    
+  case class Item(identifier: String, stopPrice: Int):
     def allowsBid(bid: Int): Boolean = bid <= stopPrice
-  }
-}
+

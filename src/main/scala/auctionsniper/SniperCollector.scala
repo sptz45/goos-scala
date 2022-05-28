@@ -1,5 +1,4 @@
 package auctionsniper
 
-trait SniperCollector {
+trait SniperCollector:
   def addSniper(sniper: AuctionSniper): Unit
-}

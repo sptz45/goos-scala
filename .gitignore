@@ -2,6 +2,7 @@ build/
 auction-sniper.log*
 .idea
 .idea_modules
+.bsp
 target
 logs
 *.iml

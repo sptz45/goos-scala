@@ -2,29 +2,17 @@ package auctionsniper.ui
 
 import auctionsniper.SniperSnapshot
 
-sealed abstract class Column(val name: String, val ordinal: Int) {
-  def valueIn(snapshot: SniperSnapshot): Any
-}
+enum Column(val name: String):
+  case ITEM_IDENTIFIER extends Column("Item")
+  case LAST_PRICE extends Column("Last Price")
+  case LAST_BID extends Column("Last Bid")
+  case SNIPER_STATE extends Column("State")
 
-object Column {
-  
-  object ITEM_IDENTIFIER extends Column("Item", 0) {
-    def valueIn(snapshot: SniperSnapshot): String = snapshot.itemId
-  }
-  
-  object LAST_PRICE extends Column("Last Price", 1) {
-    def valueIn(snapshot: SniperSnapshot): Int = snapshot.lastPrice
-  }
+  def valueIn(snapshot: SniperSnapshot): Any = this match
+    case Column.ITEM_IDENTIFIER => snapshot.itemId
+    case Column.LAST_PRICE => snapshot.lastPrice
+    case Column.LAST_BID => snapshot.lastBid
+    case Column.SNIPER_STATE => SnipersTableModel.textFor(snapshot.state)
 
-  object LAST_BID extends Column("Last Bid", 2) {
-    def valueIn(snapshot: SniperSnapshot): Int = snapshot.lastBid
-  }
-  
-  object SNIPER_STATE extends Column("State", 3) {
-    def valueIn(snapshot: SniperSnapshot): String = SnipersTableModel.textFor(snapshot.state)
-  }
-  
-  val values = List(ITEM_IDENTIFIER, LAST_PRICE, LAST_BID, SNIPER_STATE)
-  
-  def at(offset: Int): Column = values(offset)
-}
+object Column:
+  def at(offset: Int): Column = Column.values(offset)

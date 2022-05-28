@@ -7,47 +7,37 @@ import auctionsniper.util.Announcer
 class XMPPAuction(
   connection: XMPPConnection,
   auctionJID: String,
-  failureReporter: XMPPFailureReporter) extends Auction {
+  failureReporter: XMPPFailureReporter) extends Auction:
 
-  import XMPPAuction._
+  import XMPPAuction.*
 
   private val auctionEventListeners = Announcer.to[AuctionEventListener]
   private val translator = translatorFor(connection)
   private val chat = connection.getChatManager.createChat(auctionJID, translator)
   addAuctionEventListener(chatDisconnectorFor(translator))
    
-  def bid(amount: Int): Unit = { 
-    sendMessage(BID_COMMAND_FORMAT.format(amount)) 
-  } 
+  def bid(amount: Int): Unit =
+    sendMessage(BID_COMMAND_FORMAT.format(amount))
   
-  def join(): Unit = { 
+  def join(): Unit =
     sendMessage(JOIN_COMMAND_FORMAT)
-  }
   
-  final def addAuctionEventListener(listener: AuctionEventListener): Unit = {
+  final def addAuctionEventListener(listener: AuctionEventListener): Unit =
     auctionEventListeners += listener
-  }
   
   private def translatorFor(connection: XMPPConnection) =
-    new AuctionMessageTranslator(connection.getUser, auctionEventListeners.announce(), failureReporter)
+    AuctionMessageTranslator(connection.getUser, auctionEventListeners.announce(), failureReporter)
   
-  private def chatDisconnectorFor(translator: AuctionMessageTranslator) = new AuctionEventListener() { 
-    def auctionFailed(): Unit = { chat.removeMessageListener(translator) }
-    def auctionClosed(): Unit = { }
-    def currentPrice(price: Int, increment: Int, priceSource: PriceSource): Unit = { } 
-  }
+  private def chatDisconnectorFor(translator: AuctionMessageTranslator) = new AuctionEventListener():
+    def auctionFailed(): Unit = chat.removeMessageListener(translator)
+    def auctionClosed(): Unit = ()
+    def currentPrice(price: Int, increment: Int, priceSource: PriceSource): Unit = ()
   
-  private def sendMessage(message: String): Unit = { 
-    try {
-      chat.sendMessage(message)
-    } catch {
-      case e: XMPPException => e.printStackTrace() 
-    } 
-  } 
-}
+  private def sendMessage(message: String): Unit =
+    try chat.sendMessage(message)
+    catch case e: XMPPException => e.printStackTrace()
 
 
-object XMPPAuction {
+object XMPPAuction:
   val JOIN_COMMAND_FORMAT = "SOLVersion: 1.1; Command: JOIN;"
   val BID_COMMAND_FORMAT = "SOLVersion: 1.1; Command: BID; Price: %d;"
-}

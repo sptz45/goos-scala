@@ -1,12 +1,12 @@
 package auctionsniper
 
-import SniperState._
+import SniperState.*
 
 case class SniperSnapshot(
   itemId: String,
   lastPrice: Int = 0,
   lastBid: Int = 0,
-  state: SniperState = JOINING) {
+  state: SniperState = JOINING):
 
   def bidding(newLastPrice: Int, newLastBid: Int): SniperSnapshot =
     copy(lastPrice=newLastPrice, lastBid=newLastBid, state=BIDDING)
@@ -20,8 +20,7 @@ case class SniperSnapshot(
   def failed(): SniperSnapshot = SniperSnapshot(itemId, state=FAILED)
 
   def isForSameItemAs(sniperSnapshot: SniperSnapshot): Boolean = itemId == sniperSnapshot.itemId
-}
 
-object SniperSnapshot {
+
+object SniperSnapshot:
   def joining(itemId: String): SniperSnapshot = SniperSnapshot(itemId)
-}

@@ -2,7 +2,7 @@ package test.endtoend.auctionsniper
 
 import munit.FunSuite
 
-class AuctionSniperEndToEndTest extends FunSuite {
+class AuctionSniperEndToEndTest extends FunSuite:
 
   private val fixture = FunFixture[(ApplicationRunner, FakeAuctionServer, FakeAuctionServer)](
     setup = _ => {
@@ -125,9 +125,7 @@ class AuctionSniperEndToEndTest extends FunSuite {
     application.hasShownSniperHasFailed(auction)
   } 
   
-  private def waitForAnotherAuctionEvent(application: ApplicationRunner, auction2: FakeAuctionServer): Unit = {
+  private def waitForAnotherAuctionEvent(application: ApplicationRunner, auction2: FakeAuctionServer): Unit =
     auction2.hasReceivedJoinRequestFrom(ApplicationRunner.SNIPER_XMPP_ID)
     auction2.reportPrice(600, 6, "other bidder")
     application.hasShownSniperIsBidding(auction2, 600, 606)
-  }
-} 

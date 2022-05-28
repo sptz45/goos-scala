@@ -1,25 +1,22 @@
 package auctionsniper
 
-sealed class SniperState private(val ordinal: Int) {
+import auctionsniper.util.Defect
 
-  def whenAuctionClosed: SniperState = throw new util.Defect("Auction is already closed")
-}
+enum SniperState:
 
-object SniperState {
-  
-  object JOINING extends SniperState(0) {
-    override def whenAuctionClosed = LOST 
-  }
-  object BIDDING extends SniperState(1) { 
-    override def whenAuctionClosed = LOST 
-  }
-  object WINNING extends SniperState(2) {
-    override def whenAuctionClosed = WON
-  } 
-  object LOSING extends SniperState(3) {
-    override def whenAuctionClosed = LOST 
-  }
-  object LOST extends SniperState(4)
-  object WON extends SniperState(5)
-  object FAILED extends SniperState(6)
-}
+  case JOINING
+  case BIDDING
+  case WINNING
+  case LOSING
+
+  // terminal states
+  case LOST
+  case WON
+  case FAILED
+
+  def whenAuctionClosed: SniperState = this match
+    case JOINING => LOST
+    case BIDDING => LOST
+    case WINNING => WON
+    case LOSING => LOST
+    case LOST | WON | FAILED => throw Defect("Auction is already closed")

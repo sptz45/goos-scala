@@ -3,29 +3,23 @@ lazy val root = (project in file("."))
   .configs(IntegrationTest)
   .settings(
     name := "goos-scala",
-    version := "0.2.13",
-    scalaVersion := "2.13.1",
+    version := "0.3.1",
+    scalaVersion := "3.1.2",
     Defaults.itSettings,
     Test / parallelExecution := false,
     Test / fork := true,
     IntegrationTest / unmanagedBase := baseDirectory.value / "testlib",
     IntegrationTest / parallelExecution := false,
     IntegrationTest / fork := true,
-    inConfig(IntegrationTest)(scalafixConfigSettings(IntegrationTest)),
-    addCompilerPlugin(scalafixSemanticdb), // enable SemanticDB
-    semanticdbEnabled := true, // enable SemanticDB
-    semanticdbVersion := scalafixSemanticdb.revision, // use Scalafix compatible version
-    scalacOptions += "-Ywarn-unused:imports", // required by `RemoveUnused` rule
-    scalacOptions += "-Yrangepos",          // required by SemanticDB compiler plugin
     scalacOptions += "-deprecation",
     libraryDependencies ++= Seq(
       "commons-io"                  % "commons-io"         % "2.6",
       "org.apache.commons"          % "commons-lang3"      % "3.10",
       "org.igniterealtime.smack"    % "smack"              % "3.2.1",
       "org.igniterealtime.smack"    % "smackx"             % "3.2.1",
-      "org.jmock"                   % "jmock"              % "2.12.0" % "test",
-      "org.jmock"                   % "jmock-imposters"    % "2.12.0" % "test",
-      "org.scalameta"              %% "munit"              % "0.7.7"  % "it,test",
+      "org.jmock"                   % "jmock"              % "2.12.0" % "it,test",
+      "org.jmock"                   % "jmock-imposters"    % "2.12.0" % "it,test",
+      "org.scalameta"              %% "munit"              % "0.7.29" % "it,test",
 
     ),
     testFrameworks += new TestFramework("munit.Framework"),

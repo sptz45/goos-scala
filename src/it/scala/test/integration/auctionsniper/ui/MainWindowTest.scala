@@ -8,7 +8,7 @@ import munit.FunSuite
 import org.hamcrest.Matchers.equalTo
 import test.endtoend.auctionsniper.AuctionSniperDriver
 
-class MainWindowTest extends FunSuite {
+class MainWindowTest extends FunSuite:
 
   private val mainWindow = new MainWindow(new SniperPortfolio) 
   private val driver = new AuctionSniperDriver(100) 
@@ -20,4 +20,3 @@ class MainWindowTest extends FunSuite {
     driver.startBiddingWithStopPrice("an item-id", 789)
     driver.check(itemProbe)
   }
-}

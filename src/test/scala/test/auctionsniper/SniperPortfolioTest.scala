@@ -6,19 +6,18 @@ import auctionsniper.{AuctionSniper, SniperPortfolio}
 import org.jmock.Expectations
 import test.fixtures.JMockSuite
 
-class SniperPortfolioTest extends JMockSuite {
+class SniperPortfolioTest extends JMockSuite:
 
   test("notifies listeners of new snipers") {
 
     val listener = context().mock(classOf[PortfolioListener])
-    val portfolio = new SniperPortfolio
+    val portfolio = SniperPortfolio()
 
-    val sniper = new AuctionSniper(Item("item id", 123), null)
-    context().checking(new Expectations {
+    val sniper = AuctionSniper(Item("item id", 123), null)
+    context().checking(new Expectations:
       oneOf(listener).sniperAdded(sniper)
-    })
+    )
     portfolio.addPortfolioListener(listener)
     
     portfolio.addSniper(sniper)
   }
-}

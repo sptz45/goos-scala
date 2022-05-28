@@ -9,11 +9,11 @@ import auctionsniper.{AuctionEventListener, PriceSource}
 import munit.FunSuite
 import test.endtoend.auctionsniper.{ApplicationRunner, FakeAuctionServer}
 
-class XMPPAuctionHouseTest extends FunSuite {
+class XMPPAuctionHouseTest extends FunSuite:
 
   private val fixture = FunFixture[(FakeAuctionServer, XMPPAuctionHouse)](
     setup = _ => {
-      val auctionServer = new FakeAuctionServer("item-54321")
+      val auctionServer = FakeAuctionServer("item-54321")
       val auctionHouse = XMPPAuctionHouse.connect(
         FakeAuctionServer.XMPP_HOSTNAME, ApplicationRunner.SNIPER_ID, ApplicationRunner.SNIPER_PASSWORD)
       auctionServer.startSellingItem()
@@ -27,7 +27,7 @@ class XMPPAuctionHouseTest extends FunSuite {
   )
 
   fixture.test("receives events from auction server after joining") { case (auctionServer, auctionHouse) =>
-    val auctionWasClosed = new CountDownLatch(1) 
+    val auctionWasClosed = CountDownLatch(1)
     
     val auction = auctionHouse.auctionFor(Item(auctionServer.itemId, 567))
     auction.addAuctionEventListener(auctionClosedListener(auctionWasClosed))
@@ -39,9 +39,7 @@ class XMPPAuctionHouseTest extends FunSuite {
   } 
 
   private def auctionClosedListener(auctionWasClosed: CountDownLatch) =
-    new AuctionEventListener() { 
-      def auctionClosed(): Unit = { auctionWasClosed.countDown() } 
-      def currentPrice(price: Int, increment: Int, priceSource: PriceSource): Unit = { }
-      def auctionFailed(): Unit = { }
-    }
-}
+    new AuctionEventListener():
+      def auctionClosed(): Unit = auctionWasClosed.countDown()
+      def currentPrice(price: Int, increment: Int, priceSource: PriceSource): Unit = ()
+      def auctionFailed(): Unit = ()
